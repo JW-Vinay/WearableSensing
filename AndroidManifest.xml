@@ -26,6 +26,13 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".BluetoothPairingReceiver">        
+             <intent-filter>
+                <action android:name="android.bluetooth.device.action.FOUND" />
+
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+            </intent-filter>
+        </receiver>
         <service
             android:name=".DataCollectService"
             android:exported="false" />
