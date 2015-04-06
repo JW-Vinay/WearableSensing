@@ -1,5 +1,7 @@
 package com.wearables;
 
+import com.wearables.Constants.SERVICE_ACTIONS;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -15,38 +17,18 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
+		setContentView(R.layout.activity_main);	
 		Intent intent = new Intent(this, DataCollectService.class);
-		intent.putExtra("Start", "start");
+		intent.putExtra(Constants.INTENT_TASK_ACTION, SERVICE_ACTIONS.START_SERVICE);
 		startService(intent);
 	}
-
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-	    public void onReceive(Context context, Intent intent) {
-	        String action = intent.getAction();
-	        // When discovery finds a device
-	        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-	            // Get the BluetoothDevice object from the Intent
-	            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-	            if(device.getAddress().compareTo("C8:3E:99:0D:6B:EE") == 0)
-	            {
-//	            	mBluetoothAdapter.cancelDiscovery();
-//	            	connectDevice(device);
-//	            	pairDevice(device);
-	            }
-	            // Add the name and address to an array adapter to show in a ListView
-//	            mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-	        }
-	    }
-	};
 	
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-    	IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		registerReceiver(mReceiver, filter);
+    	//IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		//registerReceiver(mReceiver, filter);
 	}
 	
 	@Override

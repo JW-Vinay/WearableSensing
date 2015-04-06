@@ -3,6 +3,7 @@ package com.wearables;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import com.wearables.Constants.SERVICE_ACTIONS;
 import com.wearables.zephyr.BTClient;
 import com.wearables.zephyr.ConnectListenerImpl;
 import com.wearables.zephyr.ConnectedListener;
@@ -11,6 +12,8 @@ import com.wearables.zephyr.ZephyrProtocol;
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -75,25 +78,44 @@ public class DataCollectService extends IntentService {
     protected void onHandleIntent(Intent workIntent) {
         // Gets a URL to read from the incoming Intent's "data" value
 //        String localUrlString = workIntent.getDataString();
-        //Zephyr BH3
-		mBluetoothAdapter = BluetoothAdapter
-				.getDefaultAdapter();
+    	SERVICE_ACTIONS action = (SERVICE_ACTIONS) workIntent.getSerializableExtra(Constants.INTENT_TASK_ACTION);
+    	mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 			Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
+			return;
 		} 
-		else {
-			if (!mBluetoothAdapter.isEnabled()) {
-				Intent discoverableIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-				discoverableIntent.putExtra(
-						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-				discoverableIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(discoverableIntent);
-			}
-			else {
-				queryPairedDevices();
-			}
-		}
+	
+    	if(action == SERVICE_ACTIONS.START_SERVICE)
+    	{
+    		 //Zephyr BH3
+//    		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//    		if (mBluetoothAdapter == null) {
+//    			Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
+//    		} 
+//    		else {
+    			if (!mBluetoothAdapter.isEnabled()) {
+    				Intent discoverableIntent = new Intent(
+    						BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+    				discoverableIntent.putExtra(
+    						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+    				discoverableIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    				startActivity(discoverableIntent);
+    			}
+    			else {
+    				queryPairedDevices();
+    			}
+//    		}
+    	}
+    	else if(action == SERVICE_ACTIONS.PAIR_DEVICE) { 
+    		mBluetoothAdapter.cancelDiscovery();
+    		BluetoothDevice device = workIntent.getParcelableExtra(Constants.INTENT_DEV);
+    		pairDevice(device);
+//    		queryPairedDevices();
+        }
+    	else if(action == SERVICE_ACTIONS.CONNECT_DEVICE)
+    		connectDevice();
+    		
+       
     }
 	final Handler handler = new Handler() {
 	   	public void handleMessage(Message msg) {
@@ -152,6 +174,25 @@ public class DataCollectService extends IntentService {
 			mBluetoothAdapter.startDiscovery();
 	}
 	
+//	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//	    public void onReceive(Context context, Intent intent) {
+//	        String action = intent.getAction();
+//	        // When discovery finds a device
+//	        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//	            // Get the BluetoothDevice object from the Intent
+//	            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//	            if(device.getAddress().compareTo("C8:3E:99:0D:6B:EE") == 0)
+//	            {
+////	            	mBluetoothAdapter.cancelDiscovery();
+////	            	connectDevice(device);
+//	            	pairDevice(device);
+//	            }
+//	            // Add the name and address to an array adapter to show in a ListView
+////	            mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+//	        }
+//	    }
+//	};
+	
 	private void pairDevice(BluetoothDevice device)
 	{
 		try {
@@ -163,6 +204,7 @@ public class DataCollectService extends IntentService {
 	    } 
 		catch (Exception e) {
 	        Log.e("pairDevice()", e.getMessage());
+	        e.printStackTrace();
 		}
 	}
 		
