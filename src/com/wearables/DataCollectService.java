@@ -110,7 +110,6 @@ public class DataCollectService extends IntentService {
     		mBluetoothAdapter.cancelDiscovery();
     		BluetoothDevice device = workIntent.getParcelableExtra(Constants.INTENT_DEV);
     		pairDevice(device);
-//    		queryPairedDevices();
         }
     	else if(action == SERVICE_ACTIONS.CONNECT_DEVICE)
     		connectDevice();

@@ -35,6 +35,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".WebViewActivity" />
+
         <service
             android:name=".DataCollectService"
             android:exported="false" />

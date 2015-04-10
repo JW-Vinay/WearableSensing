@@ -1,27 +1,50 @@
 package com.wearables;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
+import java.util.HashMap;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.wearables.Constants.SERVICE_ACTIONS;
+import com.wearables.networking.NetworkUtils;
 
 public class MainActivity extends Activity {
 
+	private Button miHealthBtn;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);	
+		setContentView(R.layout.activity_main);
+		
+		miHealthBtn = (Button) findViewById(R.id.ihealthBtn);
+		miHealthBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+//				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+				
+				Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+				String url = NetworkUtils.generateUrl("", NetworkUtils.getAuthorizationParams()); //TODO: Change here
+				intent.putExtra("url", url);
+				startActivity(intent);
+				
+			}
+		});
+		
 		Intent intent = new Intent(this, DataCollectService.class);
 		intent.putExtra(Constants.INTENT_TASK_ACTION, SERVICE_ACTIONS.START_SERVICE);
 		startService(intent);
 	}
+	
+	
 	
 	@Override
 	protected void onStart() {
