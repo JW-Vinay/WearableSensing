@@ -135,6 +135,10 @@ public class DataCollectService extends IntentService {
 		   		case SUMMARY_DATA_PACKET:
 		       		String SummaryText = msg.getData().getString("SummaryDataText");
 		       		System.out.println("" + "test" + SummaryText);
+		       		Intent intent = new Intent();
+		       		intent.setAction("com.wearable.ui");
+		       		intent.putExtra("summary", SummaryText);
+		       		sendBroadcast(intent);
 //		       		tv = (TextView)findViewById(R.id.SummaryDataText);
 //		       		if (tv != null) tv.setText(SummaryText);
 		   			break;
