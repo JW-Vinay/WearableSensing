@@ -23,8 +23,8 @@ public class NetworkUtils {
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("client_id", "8ee4d0aac5f64b28a75da8e48ba05de5");
 		data.put("response_type", "code");
-		data.put("redirect_uri", "");
-		
+		data.put("redirect_uri", "http://codingthecrowd.com/class/abiyer/CuraTest/index.html");
+		data.put("APIName", "OpenApiWeight+OpenApiBP+OpenApiSpO2+OpenApiBG+OpenApiActivity+OpenApiSleep");
 		return data;
 	}
 }

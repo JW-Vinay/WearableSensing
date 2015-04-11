@@ -32,16 +32,16 @@ public class MainActivity extends Activity {
 //				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				
 				Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-				String url = NetworkUtils.generateUrl("", NetworkUtils.getAuthorizationParams()); //TODO: Change here
+				String url = NetworkUtils.generateUrl("https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/", NetworkUtils.getAuthorizationParams()); //TODO: Change here
 				intent.putExtra("url", url);
-				startActivity(intent);
+				startActivityForResult(intent, 100);
 				
 			}
 		});
 		
-		Intent intent = new Intent(this, DataCollectService.class);
-		intent.putExtra(Constants.INTENT_TASK_ACTION, SERVICE_ACTIONS.START_SERVICE);
-		startService(intent);
+//		Intent intent = new Intent(this, DataCollectService.class);
+//		intent.putExtra(Constants.INTENT_TASK_ACTIONs, SERVICE_ACTIONS.START_SERVICE);
+//		startService(intent);
 	}
 	
 	
@@ -57,7 +57,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
 		switch (resultCode) {
 //		case REQUEST_ENABLE_BT:
 //			if (resultCode == RESULT_OK) {
@@ -66,6 +65,10 @@ public class MainActivity extends Activity {
 //				Toast.makeText(this, "Disabled", Toast.LENGTH_SHORT).show();
 //			}
 //			break;
+		case 100:
+			System.out.println("ssup");
+			break;
+		
 		case 300:
 			//discoverable now
 			break;
