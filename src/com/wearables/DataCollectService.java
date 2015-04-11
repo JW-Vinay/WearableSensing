@@ -174,7 +174,10 @@ public class DataCollectService extends IntentService {
 				_bt.start();
 		}
 		else
+		{
+			System.out.println("new device found!");
 			mBluetoothAdapter.startDiscovery();
+		}
 	}
 	
 //	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -199,14 +202,17 @@ public class DataCollectService extends IntentService {
 	private void pairDevice(BluetoothDevice device)
 	{
 		try {
-	        Log.d("pairDevice()", "Start Pairing...");
+	        //Log.d("pairDevice()", "Start Pairing...");
+			System.out.println("Start pairing...");
 	        Method m = device.getClass().getMethod("createBond", (Class[]) null);
 	        m.invoke(device, (Object[]) null);
-	        Log.d("pairDevice()", "Pairing finished.");
+	        System.out.println("Pairing finished!");
+	        //Log.d("pairDevice()", "Pairing finished.");
 	        connectDevice();
 	    } 
 		catch (Exception e) {
-	        Log.e("pairDevice()", e.getMessage());
+			System.out.println("Something's wrong during pairing...");
+	        Log.e("pairDevice()", "" + e.getMessage());
 	        e.printStackTrace();
 		}
 	}
@@ -222,9 +228,11 @@ public class DataCollectService extends IntentService {
 		_bt.addConnectedEventListener(_listener);
 		/*Kick off the thread to launch its activity*/
 		if(_bt.IsConnected())
-		{
 			_bt.start();
-		}
+//		else {
+//			System.out.println("Failed to connect!");
+//		    _bt.Close();
+//		}
 	}
 }
 

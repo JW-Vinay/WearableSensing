@@ -1,6 +1,7 @@
 package com.wearables.zephyr;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
@@ -78,17 +79,35 @@ public class BTClient extends Thread {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Failed to build communication.");
+//			e.printStackTrace();
+			try
+			{
+				Class<?> clazz = _btStream.getRemoteDevice().getClass();
+	            Class<?>[] paramTypes = new Class<?>[] {Integer.TYPE};
+	            Method m = clazz.getMethod("createRfcommSocket", paramTypes);
+	            Object[] params = new Object[] {Integer.valueOf(1)};
+	            _btStream = (BluetoothSocket) m.invoke(_btStream.getRemoteDevice(), params);
+//	            Thread.sleep(500);
+	            _btStream.connect();
+	            _isConnected = true;
+            
+			}
+			catch(Exception e1)
+			{
+				
+			}
+			
 		}
 	}
 	
 	@Override
-	public void run()
+	public void run() 
 	{		
 
 			//Needs to call this to be sure enough to cancel a discovery service
 			//since it is heavy weight service
-			_adapter.cancelDiscovery();
+			//_adapter.cancelDiscovery();
 			
 		
 		if (_isConnected == true)
