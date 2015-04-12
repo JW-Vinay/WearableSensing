@@ -1,6 +1,9 @@
 package com.wearables.zephyr;
 
 
+import com.wearables.models.BiometricSummaryModel;
+import com.wearables.utils.Constants;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +53,7 @@ import android.util.Log;
 //    	private BreathingPacketInfo BreathingInfoPacket = new  BreathingPacketInfo();
 //    	private RtoRPacketInfo RtoRInfoPacket = new RtoRPacketInfo();
 //    	private AccelerometerPacketInfo AccInfoPacket = new AccelerometerPacketInfo();
-    	private SummaryPacketInfo SummaryInfoPacket = new SummaryPacketInfo();
+    	private SummaryPacketInfo summaryInfoPacket = new SummaryPacketInfo();
     	
     	public PacketTypeRequest RequestedPacketTypes = new PacketTypeRequest();
     	public ConnectListenerImpl(Handler handler, byte[] dataBytes)
@@ -307,10 +310,6 @@ import android.util.Log;
     					int seq = msg.getBytes()[0] & 127 + (((msg.getBytes()[0] & 128) > 1) ? 128 : 0);
     					TotalNumSummaryBytes = TotalNumSummaryBytes+RcvdBytes;
     					
-    					//if ((seq % 11) == 0)
-    					//{
-    						
-    					//}
     					int diff = seq - seqIDSummaryPacket;
     					if (diff > 1)
     						missedSummaryPacket += diff -1;
@@ -320,14 +319,24 @@ import android.util.Log;
     					TotalMissedSummaryPackets +=missedSummaryPacket;
     					
 //						String Summarytext1 = String.format("Received Summary Packet#%d,Bytes Rcvd #%d, Dropped Pckts #%d, CRC Fail #%d", seq,TotalNumSummaryBytes,TotalMissedSummaryPackets,CRCFailStatus);
-    					String summarytext = "Posture is  "+SummaryInfoPacket.GetPosture(msg.getBytes()) + 
-    							"\nHeart Rate: " + SummaryInfoPacket.GetHeartRate(msg.getBytes())
-    							+ "\nRespiration Rate: " + SummaryInfoPacket.GetRespirationRate(msg.getBytes())
-    							+ "\nTemperature: " + SummaryInfoPacket.GetCoreTemperature(msg.getBytes());
+    					int posture  = summaryInfoPacket.GetPosture(msg.getBytes());
+    					int heartRate = summaryInfoPacket.GetHeartRate(msg.getBytes());
+    					double respRate = summaryInfoPacket.GetRespirationRate(msg.getBytes());
+    					double temp = summaryInfoPacket.GetCoreTemperature(msg.getBytes());
+    					double ecg = summaryInfoPacket.GetECGAmplitude(msg.getBytes());
+    					long timestamp = summaryInfoPacket.GetMsofDay(msg.getBytes());
+    					String summarytext = "Posture is  "+ posture + 
+    							"\nHeart Rate: " + heartRate
+    							+ "\nRespiration Rate: " + respRate
+    							+ "\nTemperature: " + temp
+    							+ "\nECG: " + ecg;
+    					
+    					BiometricSummaryModel model = new BiometricSummaryModel(posture, heartRate, respRate, temp, ecg, timestamp);
 						Message text1 = _handler.obtainMessage(SUMMARY_DATA_PACKET);
 						Bundle b1 = new Bundle();
-						b1.putString("SummaryDataText", summarytext);
-						Log.d("Zephyr Summary PacketParsed", summarytext);
+						b1.putParcelable(Constants.INTENT_SUMMARY_MODEL, model);
+						b1.putString(Constants.INTENT_SUMMARY, summarytext);
+						Log.i("Zephyr Summary PacketParsed", summarytext);
 						text1.setData(b1);
 						_handler.sendMessage(text1);
 						

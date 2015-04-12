@@ -3,23 +3,24 @@ package com.wearables;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
-import com.wearables.zephyr.BTClient;
-import com.wearables.zephyr.ConnectListenerImpl;
-import com.wearables.zephyr.ConnectedListener;
-import com.wearables.zephyr.ZephyrProtocol;
-
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wearables.models.BiometricSummaryModel;
+import com.wearables.networking.NetworkUtils;
+import com.wearables.utils.Constants;
+import com.wearables.utils.Constants.SERVICE_ACTIONS;
+import com.wearables.zephyr.BTClient;
+import com.wearables.zephyr.ConnectListenerImpl;
+import com.wearables.zephyr.ConnectedListener;
+import com.wearables.zephyr.ZephyrProtocol;
 
 /**
  * This service pulls RSS content from a web site URL contained in the incoming Intent (see
@@ -133,11 +134,13 @@ public class DataCollectService extends IntentService {
 //		   			if (tv != null) tv.setText(ecgText);
 		   			break;
 		   		case SUMMARY_DATA_PACKET:
-		       		String SummaryText = msg.getData().getString("SummaryDataText");
-		       		System.out.println("" + "test" + SummaryText);
+		       		String summaryText = msg.getData().getString(Constants.INTENT_SUMMARY);
+		       		System.out.println("" + "test" + summaryText);
+		       		BiometricSummaryModel model = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
+		       		NetworkUtils.postBiometricData(DataCollectService.this, model);
 		       		Intent intent = new Intent();
 		       		intent.setAction("com.wearable.ui");
-		       		intent.putExtra("summary", SummaryText);
+		       		intent.putExtra("summary", summaryText);
 		       		sendBroadcast(intent);
 //		       		tv = (TextView)findViewById(R.id.SummaryDataText);
 //		       		if (tv != null) tv.setText(SummaryText);
@@ -145,7 +148,9 @@ public class DataCollectService extends IntentService {
 		   	}
 	   	}
 	};
-		 
+
+	
+	
 	private void queryPairedDevices()
 	{
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();

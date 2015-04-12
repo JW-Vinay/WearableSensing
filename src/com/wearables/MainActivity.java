@@ -13,8 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
 import com.wearables.networking.NetworkUtils;
+import com.wearables.utils.Constants;
+import com.wearables.utils.Constants.SERVICE_ACTIONS;
 
 public class MainActivity extends Activity {
 
