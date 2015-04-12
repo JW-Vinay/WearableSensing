@@ -21,15 +21,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml.Encoding;
+import android.view.ViewDebug.HierarchyTraceType;
 
+import com.wearables.Constants;
+//import com.wearables.Constants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
+import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
+import com.wearables.utils.JSONParser;
 import com.wearables.utils.LogUtils;
+import com.wearables.utils.SharedPrefs;
 
 public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 {
@@ -38,14 +45,17 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 	private String mUrl;
 	private boolean mShowloader;
 	private METHOD_TYPE mHttpMethod;
+	private REQUEST_TYPE mRequestType;
 	private ProgressDialog mDialog;
 	private Context mContext;
 	
-	public NetworkingTask(String url,boolean showloader, METHOD_TYPE httpMethod, Context mContext)
+	public NetworkingTask(String url,boolean showloader, METHOD_TYPE httpMethod, REQUEST_TYPE requestType,Context mContext)
 	{
 		this.mUrl = url;
 		this.mShowloader= showloader;
 		this.mHttpMethod = httpMethod;
+		this.mContext = mContext;
+		this.mRequestType = requestType;
 		
 		  if (mShowloader) {
               this.mDialog = new ProgressDialog(mContext);
@@ -79,7 +89,29 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 			reqObject = (JSONObject)params[0];
 		String response = establishConnection(reqObject);
 		System.out.println("response:\n" + response);
-		
+		JSONParser jParser;
+		try {
+			jParser = new JSONParser(this.mContext);
+			switch(mRequestType){
+				case ACCESS_TOKEN:
+					jParser.parseResponse(response);
+					break;
+				case SP02:
+					jParser.parseSP02(response);
+					break;
+				case BP:
+					jParser.parseBP(response);
+					break;
+				default:
+					System.out.println("default");
+					break;
+			}
+			System.out.println("ACCESS TOKEN");
+			System.out.println(SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//TODO: manipulate responses
 		return null;
 	}
@@ -92,11 +124,33 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		{
 			if(mDialog.isShowing() && mShowloader)
 				mDialog.dismiss();
+			
+			switch(mRequestType){
+				case ACCESS_TOKEN:
+					String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
+					String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
+					String refreshToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN);
+					String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+							"/" + userID + "/spo2.json" , 
+							NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
+			
+					String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+							"/" + userID + "/bp.json" , 
+							NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+					new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					break;
+				case SP02:
+					break;
+					
+			}
+		
 		}
 		catch(Exception e)
 		{
 			
 		}
+		
 		
 		
 	}

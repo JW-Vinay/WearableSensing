@@ -23,20 +23,31 @@ public class NetworkUtils {
 	{
 		//TODO: fragment this further to ensure common params are added in only 1 method and invoke them
 		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("client_id", Constants.CLIEND_ID);
+		data.put("client_id", NetworkConstants.CLIENT_ID);
 		data.put("response_type", "code");
-		data.put("redirect_uri", Constants.REDIRECT_URI);
-		data.put("APIName", Constants.APIName);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put("APIName", NetworkConstants.APIName);
 		return data;
 	}
 	
-	public static HashMap<String , String> getAccesTokenParams(String code){
+	public static HashMap<String , String> getAccessTokenParams(String code){
 		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("client_id", Constants.CLIEND_ID);
-		data.put("client_secret", Constants.CLIENT_SECRET);
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
 		data.put("grant_type", "authorization_code");
-		data.put("redirect_uri", Constants.REDIRECT_URI);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
 		data.put("code", code);
+		return data;
+	}
+	
+	public static HashMap<String, String> getDataParams(String accessToken, String svVal){
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put(NetworkConstants.ACCESS_TOKEN, accessToken);
+		data.put(NetworkConstants.SC, NetworkConstants.SC_VALUE);
+		data.put(NetworkConstants.SV, svVal);
 		return data;
 	}
 }

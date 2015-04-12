@@ -1,10 +1,7 @@
 package com.wearables;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,8 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
+import com.wearables.networking.NetworkConstants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
+import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.networking.NetworkingTask;
 
@@ -35,7 +33,7 @@ public class MainActivity extends Activity {
 //				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				
 				Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-				String url = NetworkUtils.generateUrl(Constants.USER_AUTH_URL, NetworkUtils.getAuthorizationParams()); //TODO: Change here
+				String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAuthorizationParams()); //TODO: Change here
 				intent.putExtra("url", url);
 				startActivityForResult(intent, 100);
 				
@@ -69,12 +67,11 @@ public class MainActivity extends Activity {
 //			}
 //			break;
 		case 100:
-			System.out.println("ssup");
 			String code = data.getStringExtra("code");
-			String url = NetworkUtils.generateUrl(Constants.USER_AUTH_URL, NetworkUtils.getAccesTokenParams(code));
-			new NetworkingTask(url, true, METHOD_TYPE.GET, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAccessTokenParams(code));
+			new NetworkingTask(url, true, METHOD_TYPE.GET, REQUEST_TYPE.ACCESS_TOKEN, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			break;
-		
+			
 		case 300:
 			//discoverable now
 			break;

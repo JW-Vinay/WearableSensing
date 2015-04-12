@@ -1,22 +1,37 @@
 package com.wearables.utils;
 
-import com.wearables.Constants;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+import com.wearables.Constants;
 
 public class SharedPrefs {
 	private static SharedPrefs instance = null;
-	private static SharedPreferences sharedPref;
+	private SharedPreferences mPrefs;
+	private Editor editor;
 	private SharedPrefs(Context context){
-		sharedPref = context.getSharedPreferences(Constants.SHARED_FILE, 0);
+		
+		mPrefs = context.getSharedPreferences(Constants.SHARED_FILE, 0);
+		this.editor = mPrefs.edit();
+//		mPrefs.edit();
 	}
 	
 	public static SharedPrefs getInstance(Context context){
 		if(instance == null){
-			instance = new SharedPrefs(context);
+			instance = new SharedPrefs(context) ;
 		}
 		return instance;
+	}
+	
+	public void setParameters(String key, String value){
+		
+		this.editor.putString(key, value);
+		this.editor.commit();
+	}
+	
+	public String getParameters(String key){
+		return mPrefs.getString(key, "Archana");		
 	}
 	
 	
