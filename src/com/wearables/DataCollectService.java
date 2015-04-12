@@ -232,4 +232,3 @@ public class DataCollectService extends IntentService {
 		}
 	}
 }
-
