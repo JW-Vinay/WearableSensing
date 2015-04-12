@@ -15,4 +15,7 @@ public class Constants {
 	{
 		START_SERVICE, PAIR_DEVICE, CONNECT_DEVICE,
 	}
+	
+	public static final long INTERVAL_MILLIS = 1 * 60 * 1000;
+//	public static final long INITIAL_START_TIME = 30 * 1000;
 }

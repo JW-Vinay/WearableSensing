@@ -1,6 +1,5 @@
 package com.wearables.zephyr;
 
-
 import com.wearables.models.BiometricSummaryModel;
 import com.wearables.models.BiometricBreathingModel;
 import com.wearables.models.BiometricECGModel;
@@ -41,13 +40,13 @@ import android.util.Log;
     	private int TotalNumSummaryBytes;
 //    	private int TotalNumEventBytes;
     	
-    	private int TotalMissedPacketsGP;
+//    	private int TotalMissedPacketsGP;
     	private int TotalMissedPacketsECG;
     	private int TotalMissedPacketsBreathing;
-    	private int TotalMissedPacketsRtoR;
-    	private int TotalMissedAccelerometer;
+//    	private int TotalMissedPacketsRtoR;
+//    	private int TotalMissedAccelerometer;
     	private int TotalMissedSummaryPackets;
-    	private int TotalMissedEventPackets;
+//    	private int TotalMissedEventPackets;
     	
     	private byte [] Payload;
     	
@@ -70,12 +69,12 @@ import android.util.Log;
 //    		TotalMissedPacketsGP=0;
     		TotalMissedPacketsECG=0;
     		TotalMissedPacketsBreathing=0;
-    		TotalMissedPacketsRtoR=0;
-    		TotalMissedAccelerometer=0;
+//    		TotalMissedPacketsRtoR=0;
+//    		TotalMissedAccelerometer=0;
     		TotalNumSummaryBytes=0;
     		TotalMissedSummaryPackets=0;
 //    		TotalNumEventBytes =0;
-    		TotalMissedEventPackets=0;
+//    		TotalMissedEventPackets=0;
     		Payload = dataBytes;
   
       	}
@@ -92,6 +91,7 @@ import android.util.Log;
     		
     		RequestedPacketTypes.SUMMARY_ENABLE = true;
     		RequestedPacketTypes.BREATHING_ENABLE = true;
+    		RequestedPacketTypes.ECG_ENABLE = true;
     		//RequestedPacketTypes.LOGGING_ENABLE = true;
 //    		RequestedPacketTypes.ACCELEROMETER_ENABLE = true;
     		//Creates a new ZephyrProtocol object and passes it the BTComms object
@@ -100,13 +100,13 @@ import android.util.Log;
     		//have the ReceivedPacket method as well which are in the SetGeneralPacketListener class & SetECGPacketListener class.
     		//Refer to ZephyrProtocol.java for those methods
     		_protocol.addZephyrPacketEventListener(new ZephyrPacketListener() {
-    			private int seqIDGenPacket = -1; 		private int missedGenPacket;
+//    			private int seqIDGenPacket = -1; 		private int missedGenPacket;
     			private int seqIDECGPacket = -1; 		private int missedECGPacket;
     			private int seqIDBreathPacket =-1;		private int missedBreathPacket;
-    			private int seqIDRtoRPacket=-1;			private int missedRtoRPacket;
-    			private int seqIDAccelPacket=-1;		private int missedAccelPacket;
+//    			private int seqIDRtoRPacket=-1;			private int missedRtoRPacket;
+//    			private int seqIDAccelPacket=-1;		private int missedAccelPacket;
     			private int seqIDSummaryPacket =-1;		private int missedSummaryPacket;
-    			private int seqIDEventPacket =-1;		private int missedEventPacket;
+//    			private int seqIDEventPacket =-1;		private int missedEventPacket;
     			
     			
     			@Override
@@ -116,10 +116,8 @@ import android.util.Log;
     				byte CRCFailStatus;
     				byte RcvdBytes;
     				
-
-    					
-    					CRCFailStatus = msg.getCRCStatus();
-    					RcvdBytes = msg.getNumRvcdBytes() ;
+    				CRCFailStatus = msg.getCRCStatus();
+    				RcvdBytes = msg.getNumRvcdBytes() ;
     					
 //    				if (msg.getMsgID() == 32) //GEN
 //    				{
@@ -335,13 +333,14 @@ import android.util.Log;
     							+ "\nECG: " + ecg;
     					
     					BiometricSummaryModel model = new BiometricSummaryModel(posture, heartRate, respRate, temp, ecg, timestamp);
-						Message text1 = _handler.obtainMessage(SUMMARY_DATA_PACKET);
+						Message handlerMsg = _handler.obtainMessage(SUMMARY_DATA_PACKET);
 						Bundle b1 = new Bundle();
 						b1.putParcelable(Constants.INTENT_SUMMARY_MODEL, model);
 						b1.putString(Constants.INTENT_SUMMARY, summarytext);
 						Log.i("Zephyr Summary PacketParsed", summarytext);
-						text1.setData(b1);
-						_handler.sendMessage(text1);
+						handlerMsg.setData(b1);
+//						_handler.sendMessageDelayed(handlerMsg, Constants.INTERVAL_MILLIS);
+						_handler.sendMessage(handlerMsg);
 						
 //						System.out.println("Battery Voltage is  "+SummaryInfoPacket.GetBatteryVoltage(msg.getBytes()));
 //						System.out.println("Skin Temperature  "+SummaryInfoPacket.GetSkinTemperature(msg.getBytes()));

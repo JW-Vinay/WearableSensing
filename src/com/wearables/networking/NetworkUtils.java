@@ -61,8 +61,7 @@ public class NetworkUtils {
 		catch(JSONException e)
 		{
 			LogUtils.LOGE(TAG, "" + e.getMessage());
-		}
-		
+		}		
 	}
 	
 	/**
