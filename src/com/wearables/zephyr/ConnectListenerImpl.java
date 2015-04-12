@@ -1,13 +1,13 @@
 package com.wearables.zephyr;
 
 
-import com.wearables.models.BiometricSummaryModel;
-import com.wearables.utils.Constants;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.wearables.models.BiometricSummaryModel;
+import com.wearables.utils.Constants;
 
  //***** ConnectedListenerImpl class implements ConnectedListener Interface******/  
     public class ConnectListenerImpl implements ConnectedListener<BTClient> {
@@ -332,13 +332,14 @@ import android.util.Log;
     							+ "\nECG: " + ecg;
     					
     					BiometricSummaryModel model = new BiometricSummaryModel(posture, heartRate, respRate, temp, ecg, timestamp);
-						Message text1 = _handler.obtainMessage(SUMMARY_DATA_PACKET);
+						Message handlerMsg = _handler.obtainMessage(SUMMARY_DATA_PACKET);
 						Bundle b1 = new Bundle();
 						b1.putParcelable(Constants.INTENT_SUMMARY_MODEL, model);
 						b1.putString(Constants.INTENT_SUMMARY, summarytext);
 						Log.i("Zephyr Summary PacketParsed", summarytext);
-						text1.setData(b1);
-						_handler.sendMessage(text1);
+						handlerMsg.setData(b1);
+//						_handler.sendMessageDelayed(handlerMsg, Constants.INTERVAL_MILLIS);
+						_handler.sendMessage(handlerMsg);
 						
 //						System.out.println("Battery Voltage is  "+SummaryInfoPacket.GetBatteryVoltage(msg.getBytes()));
 //						System.out.println("Skin Temperature  "+SummaryInfoPacket.GetSkinTemperature(msg.getBytes()));

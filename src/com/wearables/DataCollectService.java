@@ -9,14 +9,13 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wearables.models.BiometricSummaryModel;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
+import com.wearables.utils.LogUtils;
 import com.wearables.zephyr.BTClient;
 import com.wearables.zephyr.ConnectListenerImpl;
 import com.wearables.zephyr.ConnectedListener;
@@ -32,7 +31,8 @@ import com.wearables.zephyr.ZephyrProtocol;
  */
 public class DataCollectService extends IntentService {
     // Used to write to the system log from this class.
-    public static final String LOG_TAG = "DataCollectService";
+//    public static final String LOG_TAG = "DataCollectService";
+	private final String TAG = getClass().getSimpleName();
     
     //Zephyr BH3
 	private final int GEN_PACKET = 1200;
@@ -46,11 +46,14 @@ public class DataCollectService extends IntentService {
 	public byte[] DataBytes;
 	
 	
-	private final int REQUEST_ENABLE_BT = 100;
+//	private final int REQUEST_ENABLE_BT = 100;
+	
+	private BiometricSummaryModel mBioMetricModel;
 	private 		BluetoothAdapter mBluetoothAdapter;
 	BTClient _bt;
 	ZephyrProtocol _protocol;
 	ConnectedListener<BTClient> _listener;
+	private Handler mHandler = new Handler();
 	//Zephyr BH3
 	
     /**
@@ -67,6 +70,8 @@ public class DataCollectService extends IntentService {
     public int onStartCommand(Intent intent, int flags, int startId) {
     	// TODO Auto-generated method stub
      super.onStartCommand(intent, flags, startId);
+     mHandler.removeCallbacks(null);
+     mHandler.postDelayed(mPostRunnable, Constants.INTERVAL_MILLIS);
      return START_STICKY;
     }
     /**
@@ -117,9 +122,23 @@ public class DataCollectService extends IntentService {
     		
        
     }
+    
+    private Runnable mPostRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if(mBioMetricModel != null)
+			{
+				System.out.println("API INvoked");
+				NetworkUtils.postBiometricData(DataCollectService.this, mBioMetricModel);
+				mHandler.removeCallbacks(null);
+				mHandler.postDelayed(mPostRunnable, Constants.INTERVAL_MILLIS);
+			}
+			
+		}
+	};
 	final Handler handler = new Handler() {
 	   	public void handleMessage(Message msg) {
-	   		TextView tv;
 	   		switch (msg.what)
 	   		{
 //		  		case GEN_PACKET:
@@ -135,15 +154,12 @@ public class DataCollectService extends IntentService {
 		   			break;
 		   		case SUMMARY_DATA_PACKET:
 		       		String summaryText = msg.getData().getString(Constants.INTENT_SUMMARY);
-		       		System.out.println("" + "test" + summaryText);
-		       		BiometricSummaryModel model = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
-		       		NetworkUtils.postBiometricData(DataCollectService.this, model);
+//		       		System.out.println("" + "test" + summaryText);
+		       		mBioMetricModel = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
 		       		Intent intent = new Intent();
 		       		intent.setAction("com.wearable.ui");
 		       		intent.putExtra("summary", summaryText);
 		       		sendBroadcast(intent);
-//		       		tv = (TextView)findViewById(R.id.SummaryDataText);
-//		       		if (tv != null) tv.setText(SummaryText);
 		   			break;
 		   	}
 	   	}
@@ -204,14 +220,14 @@ public class DataCollectService extends IntentService {
 	private void pairDevice(BluetoothDevice device)
 	{
 		try {
-	        Log.d("pairDevice()", "Start Pairing...");
+	        LogUtils.LOGI(TAG, "Start Pairing...");
 	        Method m = device.getClass().getMethod("createBond", (Class[]) null);
 	        m.invoke(device, (Object[]) null);
-	        Log.d("pairDevice()", "Pairing finished.");
+	        LogUtils.LOGI(TAG, "Pairing finished.");
 	        connectDevice();
 	    } 
 		catch (Exception e) {
-	        Log.e("pairDevice()", e.getMessage());
+	        LogUtils.LOGE(TAG, ""+e.getMessage());
 	        e.printStackTrace();
 		}
 	}
