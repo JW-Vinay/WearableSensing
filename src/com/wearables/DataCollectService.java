@@ -12,6 +12,8 @@ import android.os.Message;
 import android.widget.Toast;
 
 import com.wearables.models.BiometricSummaryModel;
+import com.wearables.models.BiometricBreathingModel;
+import com.wearables.models.BiometricECGModel;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
@@ -137,34 +139,49 @@ public class DataCollectService extends IntentService {
 			
 		}
 	};
+
 	final Handler handler = new Handler() {
 	   	public void handleMessage(Message msg) {
+	   		//TextView tv;
+	   		Intent intent = new Intent();
 	   		switch (msg.what)
 	   		{
-//		  		case GEN_PACKET:
-//		  			String genText = msg.getData().getString("genText");
-//		  			System.out.println("" + genText);
+		  		case BREATH_PACKET:
+		  			String breathText = msg.getData().getString(Constants.INTENT_BREATHING);
+		       		System.out.println("" + "test" + breathText);
+		       		BiometricBreathingModel model_breath = msg.getData().getParcelable(Constants.INTENT_BREATHING_MODEL);
+		       		NetworkUtils.postBiometricData(DataCollectService.this, model_breath);
+		       		intent.setAction("com.wearable.ui");
+		       		intent.putExtra("breathing", breathText);
+		       		sendBroadcast(intent);
 //		  			tv = (TextView)findViewById(R.id.genText);
 //		  			if (tv != null) tv.setText(genText);
-//		  			break;
+		  			break;
 		   		case ECG_PACKET:
-		   			String ecgText = msg.getData().getString("ecgText");
+		  			String ecgText = msg.getData().getString(Constants.INTENT_ECG);
+		       		System.out.println("" + "test" + ecgText);
+		       		BiometricECGModel model_ecg = msg.getData().getParcelable(Constants.INTENT_ECG_MODEL);
+		       		NetworkUtils.postBiometricData(DataCollectService.this, model_ecg);
+		       		intent.setAction("com.wearable.ui");
+		       		intent.putExtra("ECG", ecgText);
+		       		sendBroadcast(intent);	   			
 //		   			tv = (TextView)findViewById(R.id.ecgText);
-//		   			if (tv != null) tv.setText(ecgText);
+//		   			String ecgText = msg.getData().getString("ecgText");if (tv != null) tv.setText(ecgText);
 		   			break;
 		   		case SUMMARY_DATA_PACKET:
 		       		String summaryText = msg.getData().getString(Constants.INTENT_SUMMARY);
-//		       		System.out.println("" + "test" + summaryText);
-		       		mBioMetricModel = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
-		       		Intent intent = new Intent();
+		       		System.out.println("" + "test" + summaryText);
+		       		BiometricSummaryModel model_summary = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
+		       		NetworkUtils.postBiometricData(DataCollectService.this, model_summary);       		
 		       		intent.setAction("com.wearable.ui");
 		       		intent.putExtra("summary", summaryText);
 		       		sendBroadcast(intent);
+//		       		tv = (TextView)findViewById(R.id.SummaryDataText);
+//		       		if (tv != null) tv.setText(SummaryText);
 		   			break;
 		   	}
 	   	}
 	};
-
 	
 	
 	private void queryPairedDevices()
@@ -248,3 +265,4 @@ public class DataCollectService extends IntentService {
 		}
 	}
 }
+

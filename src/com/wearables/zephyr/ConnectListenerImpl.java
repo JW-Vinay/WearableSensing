@@ -1,13 +1,14 @@
 package com.wearables.zephyr;
 
+import com.wearables.models.BiometricSummaryModel;
+import com.wearables.models.BiometricBreathingModel;
+import com.wearables.models.BiometricECGModel;
+import com.wearables.utils.Constants;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
-import com.wearables.models.BiometricSummaryModel;
-import com.wearables.utils.Constants;
 
  //***** ConnectedListenerImpl class implements ConnectedListener Interface******/  
     public class ConnectListenerImpl implements ConnectedListener<BTClient> {
@@ -22,6 +23,7 @@ import com.wearables.utils.Constants;
     	private  int EVENT_DATA_PACKET =1214;
     	
     	public int BREATHING_PACKET_ID = 0x21;
+    	public int ECG_PACKET_ID = 0x22;
     	public int R_to_R_PACKET_ID = 0x24;
     	public int ACCELEROMETER_PACKET_ID = 0x2A;
     	public int SUMMARY_DATA_PACKET_ID = 0x2B;
@@ -31,26 +33,26 @@ import com.wearables.utils.Constants;
     	
     	public String SerialNumber;
 //    	private int TotalNumGPBytes;
-//    	private int TotalNumECGBytes;
-//    	private int TotalNumBreathBytes;
+    	private int TotalNumECGBytes;
+    	private int TotalNumBreathBytes;
 //    	private int TotalNumRtoRBytes;
 //    	private int TotalNumAccelerometerBytes;
     	private int TotalNumSummaryBytes;
 //    	private int TotalNumEventBytes;
     	
-    	private int TotalMissedPacketsGP;
+//    	private int TotalMissedPacketsGP;
     	private int TotalMissedPacketsECG;
     	private int TotalMissedPacketsBreathing;
-    	private int TotalMissedPacketsRtoR;
-    	private int TotalMissedAccelerometer;
+//    	private int TotalMissedPacketsRtoR;
+//    	private int TotalMissedAccelerometer;
     	private int TotalMissedSummaryPackets;
-    	private int TotalMissedEventPackets;
+//    	private int TotalMissedEventPackets;
     	
     	private byte [] Payload;
     	
 //    	private GeneralPacketInfo GPInfoPacket=  new GeneralPacketInfo();
-//    	private ECGPacketInfo ECGInfoPacket = new ECGPacketInfo();
-//    	private BreathingPacketInfo BreathingInfoPacket = new  BreathingPacketInfo();
+    	private ECGPacketInfo ECGInfoPacket = new ECGPacketInfo();
+    	private BreathingPacketInfo BreathingInfoPacket = new  BreathingPacketInfo();
 //    	private RtoRPacketInfo RtoRInfoPacket = new RtoRPacketInfo();
 //    	private AccelerometerPacketInfo AccInfoPacket = new AccelerometerPacketInfo();
     	private SummaryPacketInfo summaryInfoPacket = new SummaryPacketInfo();
@@ -60,19 +62,19 @@ import com.wearables.utils.Constants;
     	{
     		_handler = handler;
 //    		TotalNumGPBytes=0;
-//    		TotalNumECGBytes=0;
-//    		TotalNumBreathBytes=0;
+    		TotalNumECGBytes=0;
+    		TotalNumBreathBytes=0;
 //    		TotalNumRtoRBytes=0;
 //    		TotalNumAccelerometerBytes=0;
-    		TotalMissedPacketsGP=0;
+//    		TotalMissedPacketsGP=0;
     		TotalMissedPacketsECG=0;
     		TotalMissedPacketsBreathing=0;
-    		TotalMissedPacketsRtoR=0;
-    		TotalMissedAccelerometer=0;
+//    		TotalMissedPacketsRtoR=0;
+//    		TotalMissedAccelerometer=0;
     		TotalNumSummaryBytes=0;
     		TotalMissedSummaryPackets=0;
 //    		TotalNumEventBytes =0;
-    		TotalMissedEventPackets=0;
+//    		TotalMissedEventPackets=0;
     		Payload = dataBytes;
   
       	}
@@ -88,7 +90,8 @@ import com.wearables.utils.Constants;
 //    		RequestedPacketTypes.GP_ENABLE = true;
     		
     		RequestedPacketTypes.SUMMARY_ENABLE = true;
-//    		RequestedPacketTypes.BREATHING_ENABLE = true;
+    		RequestedPacketTypes.BREATHING_ENABLE = true;
+    		RequestedPacketTypes.ECG_ENABLE = true;
     		//RequestedPacketTypes.LOGGING_ENABLE = true;
 //    		RequestedPacketTypes.ACCELEROMETER_ENABLE = true;
     		//Creates a new ZephyrProtocol object and passes it the BTComms object
@@ -97,13 +100,13 @@ import com.wearables.utils.Constants;
     		//have the ReceivedPacket method as well which are in the SetGeneralPacketListener class & SetECGPacketListener class.
     		//Refer to ZephyrProtocol.java for those methods
     		_protocol.addZephyrPacketEventListener(new ZephyrPacketListener() {
-    			private int seqIDGenPacket = -1; 		private int missedGenPacket;
+//    			private int seqIDGenPacket = -1; 		private int missedGenPacket;
     			private int seqIDECGPacket = -1; 		private int missedECGPacket;
     			private int seqIDBreathPacket =-1;		private int missedBreathPacket;
-    			private int seqIDRtoRPacket=-1;			private int missedRtoRPacket;
-    			private int seqIDAccelPacket=-1;		private int missedAccelPacket;
+//    			private int seqIDRtoRPacket=-1;			private int missedRtoRPacket;
+//    			private int seqIDAccelPacket=-1;		private int missedAccelPacket;
     			private int seqIDSummaryPacket =-1;		private int missedSummaryPacket;
-    			private int seqIDEventPacket =-1;		private int missedEventPacket;
+//    			private int seqIDEventPacket =-1;		private int missedEventPacket;
     			
     			
     			@Override
@@ -113,10 +116,8 @@ import com.wearables.utils.Constants;
     				byte CRCFailStatus;
     				byte RcvdBytes;
     				
-
-    					
-    					CRCFailStatus = msg.getCRCStatus();
-    					RcvdBytes = msg.getNumRvcdBytes() ;
+    				CRCFailStatus = msg.getCRCStatus();
+    				RcvdBytes = msg.getNumRvcdBytes() ;
     					
 //    				if (msg.getMsgID() == 32) //GEN
 //    				{
@@ -170,80 +171,80 @@ import com.wearables.utils.Constants;
 //						//System.out.println("Battery Voltage  is "+GPInfoPacket.GetBatteryVoltage(msg.getBytes()));
 //						/*********END REMY LEGACY TEST CODE*******************/
 //    				}
-//    				if (msg.getMsgID() == 34)
-//    				{
-//    					int seq = msg.getBytes()[0] & 127 + (((msg.getBytes()[0] & 128) > 1) ? 128 : 0);
-//    					TotalNumECGBytes = TotalNumECGBytes+RcvdBytes;
-//
-//    					
-//    					//if ((seq % 10) == 0)
-//    					//{
-//
-//    					//}
-//    					int diff = seq - seqIDECGPacket;
-//    					if (diff > 1)
-//    						missedECGPacket += diff -1;
-//    					seqIDECGPacket = seq;
-//    					if (seqIDECGPacket == 255)
-//    						seqIDECGPacket = -1;
-//    					TotalMissedPacketsECG +=missedECGPacket;
-//    					/*******************Added Amit Code************************/
-//    					if(diff>1)
-//    					{
-//    						/*****************************************
-//    						String genText = String.format("ECG Packet #%d, Missed packet %d", seq, missedECGPacket);
-//    						Message text = _handler.obtainMessage(GEN_PACKET);
-//    						Bundle b = new Bundle();
-//    						b.putString("genText", genText);
-//    						Log.d("ZephyrPacketParsed", genText);
-//    						text.setData(b);
-//    				
-//    						_handler.sendMessage(text);
-//    						***********************************************/
-//    					}
-//    					/*******************Added Amit Code************************/
-//    					
-//						/****************************REMY LEGACY TEST CODE*******************/
-//						String ecgText1 = String.format("Received ECG Packet#%d, Bytes Rcvd #%d, Dropped Pckts #%d, CRC Fail #%d ", seq,TotalNumECGBytes,TotalMissedPacketsECG,CRCFailStatus);
-//						Message text1 = _handler.obtainMessage(ECG_PACKET);
-//						Bundle b1 = new Bundle();
-//						b1.putString("ecgText", ecgText1);
-//						Log.d("ZephyrPacketParsed", ecgText1);
-//						text1.setData(b1);
-//						_handler.sendMessage(text1);
-//						//System.out.println("ECG Year is is "+ECGInfoPacket.GetTSYear(msg.getBytes()));
-//						short ECGSampleArr[] = new short[63];
-//						ECGSampleArr = ECGInfoPacket.GetECGSamples(msg.getBytes());
-//						/*********************REMY LEGACY TEST CODE*****************************/
-//    					
-//    				}
-//    				if(BREATHING_PACKET_ID == msg.getMsgID() )
-//    				{
-//    					
-//    					int seq = msg.getBytes()[0] & 127 + (((msg.getBytes()[0] & 128) > 1) ? 128 : 0);
-//    					TotalNumBreathBytes = TotalNumBreathBytes+RcvdBytes;
-// 
-//    					int diff = seq - seqIDBreathPacket;
-//    					if (diff > 1)
-//    						missedBreathPacket += diff -1;
-//    					seqIDBreathPacket = seq;
-//    					if (seqIDBreathPacket == 255)
-//    						seqIDBreathPacket = -1;
-//    					TotalMissedPacketsBreathing +=missedBreathPacket;
-//
-//						String breathText1 = String.format("Received Breathing Packet#%d,Bytes Rcvd #%d, Dropped Pckts #%d, CRC Fail #%d", seq,TotalNumBreathBytes,TotalMissedPacketsBreathing,CRCFailStatus);
-//						Message text1 = _handler.obtainMessage(BREATH_PACKET);
-//						Bundle b1 = new Bundle();
-//						b1.putString("breathText", breathText1);
-//						Log.d("ZephyrPacketParsed", breathText1);
-//						text1.setData(b1);
-//						_handler.sendMessage(text1);
-//						
-//						
-//						System.out.println("Breathing Year is is "+BreathingInfoPacket.GetTSYear(msg.getBytes()));
-//						short BreathingSampleArr[] = new short[18];
-//						BreathingSampleArr = BreathingInfoPacket.GetBreathingSamples(msg.getBytes());
-//    				}
+    				if (ECG_PACKET_ID == msg.getMsgID())
+    				{
+    					int seq = msg.getBytes()[0] & 127 + (((msg.getBytes()[0] & 128) > 1) ? 128 : 0);
+    					TotalNumECGBytes = TotalNumECGBytes+RcvdBytes;
+    					int diff = seq - seqIDECGPacket;
+    					if (diff > 1)
+    						missedECGPacket += diff -1;
+    					seqIDECGPacket = seq;
+    					if (seqIDECGPacket == 255)
+    						seqIDECGPacket = -1;
+    					TotalMissedPacketsECG +=missedECGPacket;
+    					/*******************Added Amit Code************************/
+    					if(diff>1)
+    					{
+    						/*****************************************
+    						String genText = String.format("ECG Packet #%d, Missed packet %d", seq, missedECGPacket);
+    						Message text = _handler.obtainMessage(GEN_PACKET);
+    						Bundle b = new Bundle();
+    						b.putString("genText", genText);
+    						Log.d("ZephyrPacketParsed", genText);
+    						text.setData(b);
+    				
+    						_handler.sendMessage(text);
+    						***********************************************/
+    					}
+    					/*******************Added Amit Code************************/
+    					
+    					short ECGSample[] = new short[63];
+						ECGSample = ECGInfoPacket.GetECGSamples(msg.getBytes());
+						long timestamp = ECGInfoPacket.GetMsofDay(msg.getBytes());
+    					String ecgtext = "";
+    					for(int i=0; i<63; i++)
+    						ecgtext+="ecg sample "+ i + " :" + ECGSample[i] + "\n";
+    					BiometricECGModel model = new BiometricECGModel(ECGSample, timestamp);  					
+    					Message text1 = _handler.obtainMessage(ECG_PACKET);
+						Bundle b1 = new Bundle();							
+						b1.putParcelable(Constants.INTENT_ECG_MODEL, model);
+						b1.putString(Constants.INTENT_ECG, ecgtext);
+						Log.i("Zephyr ECG PacketParsed", ecgtext);				
+						text1.setData(b1);
+						_handler.sendMessage(text1);
+  					
+    				}
+    				if(BREATHING_PACKET_ID == msg.getMsgID() )
+    				{    					
+    					int seq = msg.getBytes()[0] & 127 + (((msg.getBytes()[0] & 128) > 1) ? 128 : 0);
+    					TotalNumBreathBytes = TotalNumBreathBytes+RcvdBytes;
+ 
+    					int diff = seq - seqIDBreathPacket;
+    					if (diff > 1)
+    						missedBreathPacket += diff -1;
+    					seqIDBreathPacket = seq;
+    					if (seqIDBreathPacket == 255)
+    						seqIDBreathPacket = -1;
+    					TotalMissedPacketsBreathing +=missedBreathPacket;
+						
+    					//String breathText1 = String.format("Received Breathing Packet#%d,Bytes Rcvd #%d, Dropped Pckts #%d, CRC Fail #%d", seq,TotalNumBreathBytes,TotalMissedPacketsBreathing,CRCFailStatus);
+						   					
+    					short BreathingSample[] = new short[18];
+						BreathingSample = BreathingInfoPacket.GetBreathingSamples(msg.getBytes());
+						long timestamp = BreathingInfoPacket.GetMsofDay(msg.getBytes());
+    					
+    					String breathingtext = "";
+    					for(int i=0; i<18; i++)
+    						breathingtext+="br sample "+ i + " :" + BreathingSample[i] + "\n";
+    					BiometricBreathingModel model = new BiometricBreathingModel(BreathingSample, timestamp);  					
+    					Message text1 = _handler.obtainMessage(BREATH_PACKET);
+						Bundle b1 = new Bundle();							
+						b1.putParcelable(Constants.INTENT_BREATHING_MODEL, model);
+						b1.putString(Constants.INTENT_BREATHING, breathingtext);
+						Log.i("Zephyr Breathing PacketParsed", breathingtext);				
+						text1.setData(b1);
+						_handler.sendMessage(text1);					
+    				}
 //    				
 //    				if(R_to_R_PACKET_ID == msg.getMsgID() )
 //    				{
@@ -639,205 +640,208 @@ import com.wearables.utils.Constants;
 //		return _WornStatus;
 //	}
 // }
-//public class ECGPacketInfo
-// {
-//	private byte _SequenceNum;
-//
-//	private int _TSYear;
-//	private byte _TSMonth;
-//	private byte _TSDay;
-//	private long _MsOfDay;
-//	public final short NUM_ECG_SAMPLES_PER_PACKET = 63;
-//	private short[] _ECGSamples;
-//	public  ECGPacketInfo()
-//	{
-//		_ECGSamples = new short[NUM_ECG_SAMPLES_PER_PACKET];
-//	}
-//	public byte GetSeqNum(byte[] Payload)
-//	{
-//		_SequenceNum = (byte)(Payload[0]&0xFF);
-//		return _SequenceNum;
-//	}
-//	public int GetTSYear(byte[] Payload)
-//	{
-//		_TSYear = (Payload[1])&(0xFF);
-//		_TSYear = _TSYear | (((Payload[2])&0xFF)<<8);
-//		return _TSYear;
-//	}
-//	public byte GetTSMonth(byte[] Payload)
-//	{
-//		_TSMonth = Payload[3];
-//		return _TSMonth;
-//	}
-//	public byte GetTSDay(byte[] Payload)
-//	{
-//		_TSDay = Payload[4];
-//		return _TSDay;
-//	}
-//	public long GetMsofDay(byte[] Payload)
-//	{
-//		_MsOfDay=0;
-//		_MsOfDay = (Payload[5]) & (0xFF);
-//		_MsOfDay = _MsOfDay |(((Payload[6]) & (0xFF))<<8);
-//		_MsOfDay = _MsOfDay |(((Payload[7]) & (0xFF))<<16);
-//		_MsOfDay = _MsOfDay |(((Payload[8]) & (0xFF))<<24);
-//		return _MsOfDay;
-//	}
-//	public short[] GetECGSamples(byte[] Payload)
-//	{
-//		long PackedData;
-//		short EcgSampleindex,i,j;
-//		short NumECGSamplesPer5bytes =4;
-//		short PayloadIndex=0;
-//		short NumBitsPerECGSample=10;
-//		
-//		short NumIterations4ECGdata = (short) (NUM_ECG_SAMPLES_PER_PACKET/NumECGSamplesPer5bytes);
-//		short NumECGSamplesLeftover = (short) (NUM_ECG_SAMPLES_PER_PACKET%NumECGSamplesPer5bytes);
-//		EcgSampleindex=0;
-//		for (i=0;i <NumIterations4ECGdata;i++)
-//		{
-//			
-//			PackedData=0;
-//			/*Extracting 4 ECG samples from 5 bytes into one variable*/
-//			PackedData =(long) (Payload[9+PayloadIndex]) & (0xFF);
-//			PayloadIndex++;
-//			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<8);
-//			PayloadIndex++;
-//			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<16);
-//			PayloadIndex++;
-//			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<24);
-//			PayloadIndex++;
-//			/* Fixing the Sign Changing issue */
-//			PackedData = PackedData & (0x00000000FFFFFFFFL);
-//			long temp = (long)((Payload[9+PayloadIndex] & (0xFF))<<24);
-//			temp = temp <<8;
-//			PackedData = (long)(PackedData |temp);
-//			PayloadIndex++;
-//			for(j=0;j<NumECGSamplesPer5bytes;j++)
-//			{
-//				_ECGSamples[EcgSampleindex] = (short) ((PackedData)&(0x3FF));
-//				EcgSampleindex++;
-//				PackedData = PackedData>>NumBitsPerECGSample;
-//			}
-//		}
-//		PackedData=0;
-//		/*Extracting the remaining ECG samples from 5 bytes into one variable*/
-//		PackedData = (Payload[9+PayloadIndex]) & (0xFF);
-//		PayloadIndex++;
-//		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
-//		PayloadIndex++;
-//		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
-//		PayloadIndex++;
-//		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<24);
-//		for(j=0;j<NumECGSamplesLeftover;j++)
-//		{
-//			_ECGSamples[EcgSampleindex] = (short) ((PackedData)&(0x3FF));
-//			EcgSampleindex++;
-//			PackedData = PackedData>>NumBitsPerECGSample;
-//		}
-//		return _ECGSamples;
-//	}
-// }
-//public class BreathingPacketInfo
-//  {
-//	private byte _SequenceNum;
-//
-//	private int _TSYear;
-//	private byte _TSMonth;
-//	private byte _TSDay;
-//	private long _MsOfDay;
-//	public final short NUM_BREATHING_SAMPLES_PER_PACKET = 18;
-//	private short[] _BreathingSamples;
-//	public BreathingPacketInfo()
-//	{
-//		_BreathingSamples = new short[NUM_BREATHING_SAMPLES_PER_PACKET];
-//	}
-//	public byte GetSeqNum(byte[] Payload)
-//	{
-//		_SequenceNum = (byte)(Payload[0]&0xFF);
-//		return _SequenceNum;
-//	}
-//	public int GetTSYear(byte[] Payload)
-//	{
-//		_TSYear = (Payload[1])&(0xFF);
-//		_TSYear = _TSYear | (((Payload[2])&0xFF)<<8);
-//		return _TSYear;
-//	}
-//	public byte GetTSMonth(byte[] Payload)
-//	{
-//		_TSMonth = Payload[3];
-//		return _TSMonth;
-//	}
-//	public byte GetTSDay(byte[] Payload)
-//	{
-//		_TSDay = Payload[4];
-//		return _TSDay;
-//	}
-//	public long GetMsofDay(byte[] Payload)
-//	{
-//		_MsOfDay=0;
-//		_MsOfDay = (Payload[5]) & (0xFF);
-//		_MsOfDay = _MsOfDay |(((Payload[6]) & (0xFF))<<8);
-//		_MsOfDay = _MsOfDay |(((Payload[7]) & (0xFF))<<16);
-//		_MsOfDay = _MsOfDay |(((Payload[8]) & (0xFF))<<24);
-//		return _MsOfDay;
-//	}
-//	public short[] GetBreathingSamples(byte[] Payload)
-//	{
-//		long PackedData;
-//		short BreathingSampleindex,i,j;
-//		short NumBreathingSamplesPer5bytes =4;
-//		short PayloadIndex=0;
-//		short NumBitsPerBreathingSample=10;
-//		
-//		short NumIterations4Breathingdata = (short) (NUM_BREATHING_SAMPLES_PER_PACKET/NumBreathingSamplesPer5bytes);
-//		short NumBreathingSamplesLeftover = (short) (NUM_BREATHING_SAMPLES_PER_PACKET%NumBreathingSamplesPer5bytes);
-//		BreathingSampleindex=0;
-//		for (i=0;i <NumIterations4Breathingdata;i++)
-//		{
-//			
-//			PackedData=0;
-//			/*Extracting 4 Breathing samples from 5 bytes into one variable*/
-//			PackedData = (Payload[9+PayloadIndex]) & (0xFF);
-//			PayloadIndex++;
-//			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
-//			PayloadIndex++;
-//			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
-//			PayloadIndex++;
-//			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<24);
-//			PayloadIndex++;
-//			/* Fixing the Sign Changing issue */
-//			PackedData = PackedData & (0x00000000FFFFFFFFL);
-//			long temp = (long)((Payload[9+PayloadIndex] & (0xFF))<<24);
-//			temp = temp <<8;
-//			PackedData = PackedData |temp;
-//			PayloadIndex++;
-//			for(j=0;j<NumBreathingSamplesPer5bytes;j++)
-//			{
-//				_BreathingSamples[BreathingSampleindex] = (short) ((PackedData)&(0x3FF));
-//				BreathingSampleindex++;
-//				PackedData = PackedData>>NumBitsPerBreathingSample;
-//			}
-//		}
-//		
-//		PackedData=0;
-//		/*Extracting the remaining Breathing samples from 5 bytes into one variable*/
-//		PackedData = (Payload[9+PayloadIndex]) & (0xFF);
-//		PayloadIndex++;
-//		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
-//		PayloadIndex++;
-//		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
-//		
-//		for(j=0;j<NumBreathingSamplesLeftover;j++)
-//		{
-//			_BreathingSamples[BreathingSampleindex] = (short) ((PackedData)&(0x3FF));
-//			BreathingSampleindex++;
-//			PackedData = PackedData>>NumBitsPerBreathingSample;
-//		}
-//		return _BreathingSamples;
-//	}
-//	
-//  }
+    	
+public class ECGPacketInfo
+ {
+	private byte _SequenceNum;
+
+	private int _TSYear;
+	private byte _TSMonth;
+	private byte _TSDay;
+	private long _MsOfDay;
+	public final short NUM_ECG_SAMPLES_PER_PACKET = 63;
+	private short[] _ECGSamples;
+	public  ECGPacketInfo()
+	{
+		_ECGSamples = new short[NUM_ECG_SAMPLES_PER_PACKET];
+	}
+	public byte GetSeqNum(byte[] Payload)
+	{
+		_SequenceNum = (byte)(Payload[0]&0xFF);
+		return _SequenceNum;
+	}
+	public int GetTSYear(byte[] Payload)
+	{
+		_TSYear = (Payload[1])&(0xFF);
+		_TSYear = _TSYear | (((Payload[2])&0xFF)<<8);
+		return _TSYear;
+	}
+	public byte GetTSMonth(byte[] Payload)
+	{
+		_TSMonth = Payload[3];
+		return _TSMonth;
+	}
+	public byte GetTSDay(byte[] Payload)
+	{
+		_TSDay = Payload[4];
+		return _TSDay;
+	}
+	public long GetMsofDay(byte[] Payload)
+	{
+		_MsOfDay=0;
+		_MsOfDay = (Payload[5]) & (0xFF);
+		_MsOfDay = _MsOfDay |(((Payload[6]) & (0xFF))<<8);
+		_MsOfDay = _MsOfDay |(((Payload[7]) & (0xFF))<<16);
+		_MsOfDay = _MsOfDay |(((Payload[8]) & (0xFF))<<24);
+		return _MsOfDay;
+	}
+	public short[] GetECGSamples(byte[] Payload)
+	{
+		long PackedData;
+		short EcgSampleindex,i,j;
+		short NumECGSamplesPer5bytes =4;
+		short PayloadIndex=0;
+		short NumBitsPerECGSample=10;
+		
+		short NumIterations4ECGdata = (short) (NUM_ECG_SAMPLES_PER_PACKET/NumECGSamplesPer5bytes);
+		short NumECGSamplesLeftover = (short) (NUM_ECG_SAMPLES_PER_PACKET%NumECGSamplesPer5bytes);
+		EcgSampleindex=0;
+		for (i=0;i <NumIterations4ECGdata;i++)
+		{
+			
+			PackedData=0;
+			/*Extracting 4 ECG samples from 5 bytes into one variable*/
+			PackedData =(long) (Payload[9+PayloadIndex]) & (0xFF);
+			PayloadIndex++;
+			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<8);
+			PayloadIndex++;
+			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<16);
+			PayloadIndex++;
+			PackedData = (long)(PackedData) |((Payload[9+PayloadIndex] & (0xFF))<<24);
+			PayloadIndex++;
+			/* Fixing the Sign Changing issue */
+			PackedData = PackedData & (0x00000000FFFFFFFFL);
+			long temp = (long)((Payload[9+PayloadIndex] & (0xFF))<<24);
+			temp = temp <<8;
+			PackedData = (long)(PackedData |temp);
+			PayloadIndex++;
+			for(j=0;j<NumECGSamplesPer5bytes;j++)
+			{
+				_ECGSamples[EcgSampleindex] = (short) ((PackedData)&(0x3FF));
+				EcgSampleindex++;
+				PackedData = PackedData>>NumBitsPerECGSample;
+			}
+		}
+		PackedData=0;
+		/*Extracting the remaining ECG samples from 5 bytes into one variable*/
+		PackedData = (Payload[9+PayloadIndex]) & (0xFF);
+		PayloadIndex++;
+		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
+		PayloadIndex++;
+		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
+		PayloadIndex++;
+		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<24);
+		for(j=0;j<NumECGSamplesLeftover;j++)
+		{
+			_ECGSamples[EcgSampleindex] = (short) ((PackedData)&(0x3FF));
+			EcgSampleindex++;
+			PackedData = PackedData>>NumBitsPerECGSample;
+		}
+		return _ECGSamples;
+	}
+ }
+
+public class BreathingPacketInfo
+  {
+	private byte _SequenceNum;
+
+	private int _TSYear;
+	private byte _TSMonth;
+	private byte _TSDay;
+	private long _MsOfDay;
+	public final short NUM_BREATHING_SAMPLES_PER_PACKET = 18;
+	private short[] _BreathingSamples;
+	public BreathingPacketInfo()
+	{
+		_BreathingSamples = new short[NUM_BREATHING_SAMPLES_PER_PACKET];
+	}
+	public byte GetSeqNum(byte[] Payload)
+	{
+		_SequenceNum = (byte)(Payload[0]&0xFF);
+		return _SequenceNum;
+	}
+	public int GetTSYear(byte[] Payload)
+	{
+		_TSYear = (Payload[1])&(0xFF);
+		_TSYear = _TSYear | (((Payload[2])&0xFF)<<8);
+		return _TSYear;
+	}
+	public byte GetTSMonth(byte[] Payload)
+	{
+		_TSMonth = Payload[3];
+		return _TSMonth;
+	}
+	public byte GetTSDay(byte[] Payload)
+	{
+		_TSDay = Payload[4];
+		return _TSDay;
+	}
+	public long GetMsofDay(byte[] Payload)
+	{
+		_MsOfDay=0;
+		_MsOfDay = (Payload[5]) & (0xFF);
+		_MsOfDay = _MsOfDay |(((Payload[6]) & (0xFF))<<8);
+		_MsOfDay = _MsOfDay |(((Payload[7]) & (0xFF))<<16);
+		_MsOfDay = _MsOfDay |(((Payload[8]) & (0xFF))<<24);
+		return _MsOfDay;
+	}
+	public short[] GetBreathingSamples(byte[] Payload)
+	{
+		long PackedData;
+		short BreathingSampleindex,i,j;
+		short NumBreathingSamplesPer5bytes =4;
+		short PayloadIndex=0;
+		short NumBitsPerBreathingSample=10;
+		
+		short NumIterations4Breathingdata = (short) (NUM_BREATHING_SAMPLES_PER_PACKET/NumBreathingSamplesPer5bytes);
+		short NumBreathingSamplesLeftover = (short) (NUM_BREATHING_SAMPLES_PER_PACKET%NumBreathingSamplesPer5bytes);
+		BreathingSampleindex=0;
+		for (i=0;i <NumIterations4Breathingdata;i++)
+		{
+			
+			PackedData=0;
+			/*Extracting 4 Breathing samples from 5 bytes into one variable*/
+			PackedData = (Payload[9+PayloadIndex]) & (0xFF);
+			PayloadIndex++;
+			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
+			PayloadIndex++;
+			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
+			PayloadIndex++;
+			PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<24);
+			PayloadIndex++;
+			/* Fixing the Sign Changing issue */
+			PackedData = PackedData & (0x00000000FFFFFFFFL);
+			long temp = (long)((Payload[9+PayloadIndex] & (0xFF))<<24);
+			temp = temp <<8;
+			PackedData = PackedData |temp;
+			PayloadIndex++;
+			for(j=0;j<NumBreathingSamplesPer5bytes;j++)
+			{
+				_BreathingSamples[BreathingSampleindex] = (short) ((PackedData)&(0x3FF));
+				BreathingSampleindex++;
+				PackedData = PackedData>>NumBitsPerBreathingSample;
+			}
+		}
+		
+		PackedData=0;
+		/*Extracting the remaining Breathing samples from 5 bytes into one variable*/
+		PackedData = (Payload[9+PayloadIndex]) & (0xFF);
+		PayloadIndex++;
+		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<8);
+		PayloadIndex++;
+		PackedData = PackedData |((Payload[9+PayloadIndex] & (0xFF))<<16);
+		
+		for(j=0;j<NumBreathingSamplesLeftover;j++)
+		{
+			_BreathingSamples[BreathingSampleindex] = (short) ((PackedData)&(0x3FF));
+			BreathingSampleindex++;
+			PackedData = PackedData>>NumBitsPerBreathingSample;
+		}
+		return _BreathingSamples;
+	}
+	
+  }
+
 //public class RtoRPacketInfo
 // {
 //	private byte _SequenceNum;
@@ -1186,7 +1190,9 @@ import com.wearables.utils.Constants;
 //		}
 //	}
 //  }
-@SuppressWarnings({ "unused", "unused" })
+	
+//@SuppressWarnings({ "unused", "unused" })
+
 public class SummaryPacketInfo
  {
 	private byte _SequenceNum;
@@ -1535,9 +1541,10 @@ public class SummaryPacketInfo
 		}
 		return _coreTemperature;
 	}
-
  }
 
+
+    
 //public class EventPacketInfo
 // {
 //	private byte _SequenceNum;
@@ -1598,4 +1605,5 @@ public class SummaryPacketInfo
 //		return _EventSpecificData;
 //	}
 // }
-}    
+}
+   

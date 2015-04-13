@@ -17,7 +17,6 @@ public class BiometricSummaryModel implements Parcelable {
 	private double mBreathingRate;
 	private double mCoreTemperature;
 	private double mECGAmplitude;
-
 	private long mTimeStampRecorded;
 
 	/**
