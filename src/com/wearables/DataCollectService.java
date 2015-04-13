@@ -11,9 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.wearables.models.BiometricSummaryModel;
 import com.wearables.models.BiometricBreathingModel;
 import com.wearables.models.BiometricECGModel;
+import com.wearables.models.BiometricSummaryModel;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
@@ -37,14 +37,14 @@ public class DataCollectService extends IntentService {
 	private final String TAG = getClass().getSimpleName();
     
     //Zephyr BH3
-	private final int GEN_PACKET = 1200;
+//	private final int GEN_PACKET = 1200;
 	private final int ECG_PACKET = 1202;
 	private final int BREATH_PACKET = 1204;
-	private final int R_to_R_PACKET = 1206;
-	private final int ACCELEROMETER_PACKET = 1208;
-	private final int SERIAL_NUM_PACKET = 1210;
+//	private final int R_to_R_PACKET = 1206;
+//	private final int ACCELEROMETER_PACKET = 1208;
+//	private final int SERIAL_NUM_PACKET = 1210;
 	private final int SUMMARY_DATA_PACKET =1212;
-	private final int EVENT_DATA_PACKET =1214;
+//	private final int EVENT_DATA_PACKET =1214;
 	public byte[] DataBytes;
 	
 	

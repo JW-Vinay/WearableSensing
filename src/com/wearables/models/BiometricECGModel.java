@@ -1,14 +1,16 @@
 package com.wearables.models;
 
+import java.nio.ByteBuffer;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.wearables.utils.LogUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.nio.ByteBuffer;
+import com.wearables.utils.LogUtils;
+import com.wearables.utils.Utils;
 
 
 public class BiometricECGModel implements Parcelable {
@@ -16,6 +18,9 @@ public class BiometricECGModel implements Parcelable {
 	private final String TAG = getClass().getSimpleName();
 	private byte[] mECGSample;
 	private long mTimeStampRecorded;
+	private int mNoSamples;
+	private int mSeqNo;
+	private String mFormattedTime;
 	
 	public byte[] shortToByte(short[] short_in)
 	{
@@ -27,13 +32,13 @@ public class BiometricECGModel implements Parcelable {
 		return bb.array();       
 	}
 	
-	public short[] byteToShort(byte[] byte_in) 
-	{
-		int byte_len = byte_in.length;
-		ByteBuffer bb = ByteBuffer.allocate(byte_len);
-		bb.get(byte_in);    
-		return bb.asShortBuffer().array(); 
-	}
+//	public short[] byteToShort(byte[] byte_in) 
+//	{
+//		int byte_len = byte_in.length;
+//		ByteBuffer bb = ByteBuffer.allocate(byte_len);
+//		bb.get(byte_in);    
+//		return bb.asShortBuffer().array(); 
+//	}
 	
 	public static final Parcelable.Creator<BiometricECGModel> CREATOR = new Parcelable.Creator<BiometricECGModel>() {
 		public BiometricECGModel createFromParcel(Parcel in) {
@@ -55,14 +60,27 @@ public class BiometricECGModel implements Parcelable {
 		readFromParcel(in);
 	}
 	
-	public BiometricECGModel(short[] mECGSample, long mTimeStampRecorded) {
+	public BiometricECGModel(short[] mECGSample, long mTimeStampRecorded, int mNoSamples, int seqNo) {
 		super();
 		this.mECGSample = shortToByte(mECGSample);
 		this.mTimeStampRecorded = mTimeStampRecorded;
+		this.setmNoSamples(mNoSamples);
+		this.setmSeqNo(seqNo);
+		mFormattedTime = Utils.getFormattedTime(mTimeStampRecorded);
 	}
 
-	public short[] getmECGSample() {
-		return byteToShort(mECGSample);
+	public String getmFormattedTime() {
+		return mFormattedTime;
+	}
+
+	public void setmFormattedTime(String mFormattedTime) {
+		this.mFormattedTime = mFormattedTime;
+	}
+
+	
+	public byte[] getmECGSample() {
+//		return byteToShort(mECGSample);
+		return mECGSample;
 	}
 
 	public void setmECGSample(short[] mECGSample) {
@@ -77,6 +95,22 @@ public class BiometricECGModel implements Parcelable {
 		this.mTimeStampRecorded = mTimeStampRecorded;
 	}
 	
+	public int getmSeqNo() {
+		return mSeqNo;
+	}
+
+	public void setmSeqNo(int mSeqNo) {
+		this.mSeqNo = mSeqNo;
+	}
+
+	public int getmNoSamples() {
+		return mNoSamples;
+	}
+
+	public void setmNoSamples(int mNoSamples) {
+		this.mNoSamples = mNoSamples;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -87,12 +121,18 @@ public class BiometricECGModel implements Parcelable {
 	{
 			in.readByteArray(mECGSample);		
 			mTimeStampRecorded = in.readLong();
+			mSeqNo = in.readInt();
+			mNoSamples = in.readInt();
+			mFormattedTime = in.readString();
 	}
 	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {	
 		dest.writeByteArray(mECGSample);	
 		dest.writeLong(mTimeStampRecorded);
+		dest.writeInt(mSeqNo);
+		dest.writeInt(mNoSamples);
+		dest.writeString(mFormattedTime);
 	}
 	
 	/**
@@ -104,8 +144,15 @@ public class BiometricECGModel implements Parcelable {
 		try
 		{
 			JSONObject object = new JSONObject();
-			object.put("ecg_sample", byteToShort(mECGSample));
-//			object.put("time_recorded", mTimeStampRecorded);
+//			object.put("ecg_sample", byteToShort(mECGSample));
+			object.put("time_recorded", mFormattedTime);
+			object.put("samples_per_packet ", mNoSamples);
+			object.put("sequence_number", mSeqNo);
+			object.put("record_type", "ecg");
+			JSONArray array = new JSONArray();
+			for(byte a : mECGSample)
+				array.put(a);
+			object.put("samples", array);
 			
 			return object;
 		}

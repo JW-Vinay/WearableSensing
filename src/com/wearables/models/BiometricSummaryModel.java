@@ -112,6 +112,15 @@ public class BiometricSummaryModel implements Parcelable {
 		this.mTimeStampRecorded = mTimeStampRecorded;
 	}
 
+	public String getmFormattedTime() {
+		return mFormattedTime;
+	}
+
+	public void setmFormattedTime(String mFormattedTime) {
+		this.mFormattedTime = mFormattedTime;
+	}
+
+	
 	@Override
 	public int describeContents() {
 			return 0;
@@ -127,6 +136,7 @@ public class BiometricSummaryModel implements Parcelable {
 			mECGAmplitude = in.readDouble();
 			
 			mTimeStampRecorded = in.readLong();
+			mFormattedTime = in.readString();
 	}
 	
 	@Override
@@ -140,6 +150,7 @@ public class BiometricSummaryModel implements Parcelable {
 		dest.writeDouble(mECGAmplitude);
 		
 		dest.writeLong(mTimeStampRecorded);
+		dest.writeString(mFormattedTime);
 
 	}
 	
@@ -169,7 +180,7 @@ public class BiometricSummaryModel implements Parcelable {
 		}
 		catch(JSONException e)
 		{
-			
+			LogUtils.LOGE(TAG, "" + e.getMessage());
 		}
 		
 		return null;
@@ -199,14 +210,6 @@ public class BiometricSummaryModel implements Parcelable {
 		}
 		
 		return null;
-	}
-
-	public String getmFormattedTime() {
-		return mFormattedTime;
-	}
-
-	public void setmFormattedTime(String mFormattedTime) {
-		this.mFormattedTime = mFormattedTime;
 	}
 
 }
