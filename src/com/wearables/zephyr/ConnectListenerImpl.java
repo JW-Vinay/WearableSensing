@@ -1,14 +1,14 @@
 package com.wearables.zephyr;
 
-import com.wearables.models.BiometricSummaryModel;
-import com.wearables.models.BiometricBreathingModel;
-import com.wearables.models.BiometricECGModel;
-import com.wearables.utils.Constants;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.wearables.models.BiometricBreathingModel;
+import com.wearables.models.BiometricECGModel;
+import com.wearables.models.BiometricSummaryModel;
+import com.wearables.utils.Constants;
 
  //***** ConnectedListenerImpl class implements ConnectedListener Interface******/  
     public class ConnectListenerImpl implements ConnectedListener<BTClient> {
@@ -326,6 +326,8 @@ import android.util.Log;
     					double temp = summaryInfoPacket.GetCoreTemperature(msg.getBytes());
     					double ecg = summaryInfoPacket.GetECGAmplitude(msg.getBytes());
     					long timestamp = summaryInfoPacket.GetMsofDay(msg.getBytes());
+    									  	
+    					
     					String summarytext = "Posture is  "+ posture + 
     							"\nHeart Rate: " + heartRate
     							+ "\nRespiration Rate: " + respRate

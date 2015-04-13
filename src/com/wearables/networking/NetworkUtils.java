@@ -54,9 +54,13 @@ public class NetworkUtils {
 		try
 		{
 			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_ENDPOINT;
+			String hdUrl = NetworkConstants.HOME_DIALYSIS_ENDPOINT + NetworkConstants.POST_BIOMETRIC_HD;
 			JSONObject object = model.getJSON();
+			JSONObject hdObject = model.getHDJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+			hdObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
 			new NetworkingTask(url, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(hdUrl, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, hdObject);
 		}
 		catch(JSONException e)
 		{

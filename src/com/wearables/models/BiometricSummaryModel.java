@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.wearables.utils.LogUtils;
+import com.wearables.utils.Utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,7 +19,7 @@ public class BiometricSummaryModel implements Parcelable {
 	private double mCoreTemperature;
 	private double mECGAmplitude;
 	private long mTimeStampRecorded;
-
+	private String mFormattedTime;
 	/**
 	 * 
 	 */
@@ -60,6 +61,7 @@ public class BiometricSummaryModel implements Parcelable {
 		this.mCoreTemperature = mCoreTemperature;
 		this.mECGAmplitude = mECGAmplitude;
 		this.mTimeStampRecorded = mTimeStampRecorded;
+		this.setmFormattedTime(Utils.getFormattedTime(mTimeStampRecorded));
 	}
 
 	public int getmPosture() {
@@ -142,6 +144,38 @@ public class BiometricSummaryModel implements Parcelable {
 	}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public JSONObject getHDJSON()
+	{
+		try
+		{
+			JSONObject object = new JSONObject();
+			object.put("posture", mPosture);
+			object.put("skinTemperature", mCoreTemperature);
+			JSONObject breathingObject = new JSONObject();
+			breathingObject.put("breathing_rate", mBreathingRate);
+			object.put("breathingRate", breathingObject);
+			JSONObject heartObject = new JSONObject();
+			heartObject.put("heart_rate", mHeartRate);
+			object.put("heartRate", heartObject);
+			JSONObject ecgObject = new JSONObject();
+			ecgObject.put("ecg_amplitude", mECGAmplitude);
+			object.put("ecg", ecgObject);
+			object.put("timeRecorded", mFormattedTime);
+			
+			return object;
+		}
+		catch(JSONException e)
+		{
+			
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Get json object for the model
 	 * @return
 	 */
@@ -155,7 +189,7 @@ public class BiometricSummaryModel implements Parcelable {
 			object.put("breathing_rate", mBreathingRate);
 			object.put("heart_rate", mHeartRate);
 			object.put("ecg", mECGAmplitude);
-//			object.put("time_recorded", mTimeStampRecorded);
+			object.put("time_recorded", mFormattedTime);
 			
 			return object;
 		}
@@ -165,6 +199,14 @@ public class BiometricSummaryModel implements Parcelable {
 		}
 		
 		return null;
+	}
+
+	public String getmFormattedTime() {
+		return mFormattedTime;
+	}
+
+	public void setmFormattedTime(String mFormattedTime) {
+		this.mFormattedTime = mFormattedTime;
 	}
 
 }

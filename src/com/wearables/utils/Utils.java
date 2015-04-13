@@ -1,5 +1,8 @@
 package com.wearables.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 
 public class Utils {
@@ -19,5 +22,21 @@ public class Utils {
 //
 //		alarmManager.cancel(pendingIntent);
 //		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, Constants.INITIAL_START_TIME, Constants.INTERVAL_MILLIS, pendingIntent);
-//	}	
+//	}
+	
+	public static String getFormattedTime(long time)
+	{
+		try
+		{
+			Date d = new Date(time);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			return sdf.format(d);
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return "";
+	}
 }
