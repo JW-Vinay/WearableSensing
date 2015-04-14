@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Timer;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,10 +29,10 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Xml.Encoding;
-import android.view.ViewDebug.HierarchyTraceType;
 
-import com.wearables.Constants;
+import com.wearables.RefreshTokenTimer;
 //import com.wearables.Constants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
@@ -102,10 +104,14 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 				case BP:
 					jParser.parseBP(response);
 					break;
+				case REFRESH_TOKEN:
+					jParser.parseRefreshToken(response);
 				default:
 					System.out.println("default");
 					break;
 			}
+			System.out.println("Refresh TOKEN");
+			System.out.println("rtoken "+ SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN));
 			System.out.println("ACCESS TOKEN");
 			System.out.println(SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN));
 		} catch (JSONException e) {
@@ -130,6 +136,16 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
 					String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
 					String refreshToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN);
+
+					
+					//create a handler in an activity or fragment
+					Handler handler = new Handler();
+					
+					//create a timer task and pass the handler in
+					RefreshTokenTimer task = new RefreshTokenTimer(handler, this.mContext);
+					//use timer to run the task every 10 seconds
+					new Timer().scheduleAtFixedRate(task, 0, 10000);
+					
 					String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
 							"/" + userID + "/spo2.json" , 
 							NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));

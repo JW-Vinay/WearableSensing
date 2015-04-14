@@ -24,6 +24,17 @@ public class SharedPrefs {
 		return instance;
 	}
 	
+	public void setLongParameters(String key, long value)
+	{
+		this.editor.putLong(key, value);
+		this.editor.commit();
+	}
+	
+	public long getLongParameters(String key)
+	{
+		return mPrefs.getLong(key, 0);
+	}
+	
 	public void setParameters(String key, String value){
 		
 		this.editor.putString(key, value);
@@ -31,7 +42,7 @@ public class SharedPrefs {
 	}
 	
 	public String getParameters(String key){
-		return mPrefs.getString(key, "Archana");		
+		return mPrefs.getString(key, "");		
 	}
 	
 	

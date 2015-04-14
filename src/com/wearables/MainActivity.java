@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.networking.NetworkingTask;
+import com.wearables.utils.SharedPrefs;
 
 public class MainActivity extends Activity {
 
@@ -30,13 +32,30 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				
-				Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-				String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAuthorizationParams()); //TODO: Change here
-				intent.putExtra("url", url);
-				startActivityForResult(intent, 100);
+				//TODO: First check if access token exists
+				if(TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN)))
+				{
+					Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+					String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAuthorizationParams()); //TODO: Change here
+					intent.putExtra("url", url);
+					startActivityForResult(intent, 100);
+				}
+				else
+				{
+					int diff = (int)(System.currentTimeMillis() - SharedPrefs.getInstance(MainActivity.this).getLongParameters(NetworkConstants.TIMESTAMP));
+					if(diff > Constants.EXPIRY_TIME)
+					{
+						//TODO: Refresh TOken API
+					}
+					else
+					{
+						//TODO: Invoke GET APIs
+					}
+				}
 				
+				
+						
 			}
 		});
 		
@@ -68,8 +87,12 @@ public class MainActivity extends Activity {
 //			break;
 		case 100:
 			String code = data.getStringExtra("code");
-			String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAccessTokenParams(code));
-			new NetworkingTask(url, true, METHOD_TYPE.GET, REQUEST_TYPE.ACCESS_TOKEN, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			String url = NetworkUtils.generateUrl(
+					NetworkConstants.USER_AUTH_URL,
+					NetworkUtils.getAccessTokenParams(code));
+			new NetworkingTask(url, true, METHOD_TYPE.GET,
+					REQUEST_TYPE.ACCESS_TOKEN, this)
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			break;
 			
 		case 300:

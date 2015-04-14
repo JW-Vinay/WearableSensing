@@ -9,12 +9,13 @@ public class NetworkConstants {
 	
 	public static enum REQUEST_TYPE
 	{
-		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP
+		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP, REFRESH_TOKEN
 	}
 	
 	public static final String ACCESS_TOKEN = "access_token";
-	public static final String USER_ID = "userID";
-	public static final String REFRESH_TOKEN = "refreshToken";
+	public static final String USER_ID = "UserID";
+	public static final String REFRESH_TOKEN = "refresh_token";
+	public static final String TIMESTAMP = "timestamp";
 	
 	public static final String CLIENT_ID = "8ee4d0aac5f64b28a75da8e48ba05de5";
 	public static final String CLIENT_SECRET = "45d0831462294a63a950b60a064f7695";
@@ -22,6 +23,7 @@ public class NetworkConstants {
 	public static final String APIName = "OpenApiWeight+OpenApiBP+OpenApiSpO2+OpenApiBG+OpenApiActivity+OpenApiSleep";
 	public static final String USER_AUTH_URL = "https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/";
 	public static final String GET_BIODATA_URL = "https://api.ihealthlabs.com:8443/openapiv2/user/";
+	public static final String RESPONSE_TYPE = "response_type";
 	
 	public static final String SC = "sc";
 	public static final String SV = "sv";

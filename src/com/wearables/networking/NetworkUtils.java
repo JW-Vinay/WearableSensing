@@ -2,7 +2,10 @@ package com.wearables.networking;
 
 import java.util.HashMap;
 
+import android.content.Context;
+
 import com.wearables.Constants;
+import com.wearables.utils.SharedPrefs;
 
 public class NetworkUtils {
 
@@ -48,6 +51,19 @@ public class NetworkUtils {
 		data.put(NetworkConstants.ACCESS_TOKEN, accessToken);
 		data.put(NetworkConstants.SC, NetworkConstants.SC_VALUE);
 		data.put(NetworkConstants.SV, svVal);
+		return data;
+	}
+	
+	public static HashMap<String , String> getRefreshTokenParams(Context context){
+		HashMap<String, String> data = new HashMap<String, String>();
+		SharedPrefs sp = SharedPrefs.getInstance(context);
+		
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put(NetworkConstants.REFRESH_TOKEN, sp.getParameters(NetworkConstants.REFRESH_TOKEN));
+		data.put("response_type", NetworkConstants.REFRESH_TOKEN);
+		data.put(NetworkConstants.USER_ID, sp.getParameters(NetworkConstants.USER_ID));
 		return data;
 	}
 }

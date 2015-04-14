@@ -22,18 +22,28 @@ public class JSONParser {
 
 	public void parseResponse(String response) {
 		try {
+			System.out.println("Parse resposne");
+			System.out.println(response);
 			JSONObject jObject = new JSONObject(response);
 			SharedPrefs sp = SharedPrefs.getInstance(this.mContext);
 			if (jObject != null) {
+				
 				String accessToken = (!jObject.isNull("AccessToken")) ? jObject
 						.getString("AccessToken") : "";
 				sp.setParameters(NetworkConstants.ACCESS_TOKEN, accessToken);
+				sp.setLongParameters(NetworkConstants.TIMESTAMP, System.currentTimeMillis());
 				String userID = (!jObject.isNull("UserID")) ? jObject
 						.getString("UserID") : "";
 				sp.setParameters(NetworkConstants.USER_ID, userID);
 				String refreshToken = (!jObject.isNull("RefreshToken")) ? jObject
 						.getString("RefreshToken") : "";
+				//System.out.println(refreshToken);
 				sp.setParameters(NetworkConstants.REFRESH_TOKEN, refreshToken);
+				System.out.println("Refresh TOKEN");
+				System.out.println(SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN));
+//				String responseType = (!jObject.isNull("ResponseType")) ? jObject
+//						.getString("ResponseType") : "";
+//				sp.setParameters(NetworkConstants.RESPONSE_TYPE, responseType);
 			}
 		} catch (JSONException e) {
 
@@ -58,6 +68,28 @@ public class JSONParser {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
 				System.out.println(jObject.toString());
+			}
+		} catch (JSONException e) {
+
+		}
+	}
+
+	public void parseRefreshToken(String response) {
+		// TODO Auto-generated method stub
+		try {
+			JSONObject jObject = new JSONObject(response);
+			SharedPrefs sp = SharedPrefs.getInstance(this.mContext);
+			if (jObject != null) {
+				System.out.println(jObject.toString());
+				String accessToken = (!jObject.isNull("AccessToken")) ? jObject
+						.getString("AccessToken") : "";
+				sp.setParameters(NetworkConstants.ACCESS_TOKEN, accessToken);
+
+				String refreshToken = (!jObject.isNull("RefreshToken")) ? jObject
+						.getString("RefreshToken") : "";
+				//System.out.println(refreshToken);
+				sp.setParameters(NetworkConstants.REFRESH_TOKEN, refreshToken);
+				
 			}
 		} catch (JSONException e) {
 
