@@ -133,18 +133,19 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 			
 			switch(mRequestType){
 				case ACCESS_TOKEN:
+				case REFRESH_TOKEN:
 					String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
 					String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
 					String refreshToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN);
 
 					
-					//create a handler in an activity or fragment
-					Handler handler = new Handler();
-					
-					//create a timer task and pass the handler in
-					RefreshTokenTimer task = new RefreshTokenTimer(handler, this.mContext);
-					//use timer to run the task every 10 seconds
-					new Timer().scheduleAtFixedRate(task, 0, 10000);
+//					//create a handler in an activity or fragment
+//					Handler handler = new Handler();
+//					
+//					//create a timer task and pass the handler in
+//					RefreshTokenTimer task = new RefreshTokenTimer(handler, this.mContext);
+//					//use timer to run the task every 10 seconds
+//					new Timer().scheduleAtFixedRate(task, 0, 10000);
 					
 					String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
 							"/" + userID + "/spo2.json" , 

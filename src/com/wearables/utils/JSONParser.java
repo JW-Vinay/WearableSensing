@@ -55,6 +55,7 @@ public class JSONParser {
 		try {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
+				//TODO: write JSON parser
 				System.out.println(jObject.toString());
 			}
 		} catch (JSONException e) {
@@ -67,6 +68,7 @@ public class JSONParser {
 		try {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
+				// TODE: write JSON parser
 				System.out.println(jObject.toString());
 			}
 		} catch (JSONException e) {
@@ -89,6 +91,7 @@ public class JSONParser {
 						.getString("RefreshToken") : "";
 				//System.out.println(refreshToken);
 				sp.setParameters(NetworkConstants.REFRESH_TOKEN, refreshToken);
+				sp.setLongParameters(NetworkConstants.TIMESTAMP, System.currentTimeMillis());
 				
 			}
 		} catch (JSONException e) {

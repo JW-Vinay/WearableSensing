@@ -33,7 +33,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				//TODO: First check if access token exists
+				String a = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN);
+				// checks if access token exists or not
 				if(TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN)))
 				{
 					Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
@@ -44,13 +45,32 @@ public class MainActivity extends Activity {
 				else
 				{
 					int diff = (int)(System.currentTimeMillis() - SharedPrefs.getInstance(MainActivity.this).getLongParameters(NetworkConstants.TIMESTAMP));
+					
+					/*
+					 * If the time is greater than access token expiry and call refresh the access token 
+					 */
 					if(diff > Constants.EXPIRY_TIME)
 					{
-						//TODO: Refresh TOken API
+						String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL,
+			     				NetworkUtils.getRefreshTokenParams(MainActivity.this));
+			     		System.out.println("URL for refresh "+url);
+			     		new NetworkingTask(url, true, METHOD_TYPE.GET,
+			     				REQUEST_TYPE.REFRESH_TOKEN, MainActivity.this)
+			     				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 					else
 					{
-						//TODO: Invoke GET APIs
+						String accessToken = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN);
+						String userID = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.USER_ID);
+						String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+								"/" + userID + "/spo2.json" , 
+								NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
+				
+						String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+								"/" + userID + "/bp.json" , 
+								NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+						new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, MainActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, MainActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 				}
 				
