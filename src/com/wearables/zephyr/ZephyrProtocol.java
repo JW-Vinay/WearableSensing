@@ -3,6 +3,7 @@ package com.wearables.zephyr;
 import java.util.Iterator;
 import java.util.Vector;
 
+
 public class ZephyrProtocol implements ReceivedListener {
 	private BTComms _comms;
 	private ZephyrPacket _packet;

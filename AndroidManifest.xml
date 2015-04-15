@@ -27,13 +27,15 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".BluetoothPairingReceiver" >
+        <receiver android:name="com.wearables.utils.BluetoothPairingReceiver" >
             <intent-filter>
                 <action android:name="android.bluetooth.device.action.FOUND" />
 
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
         </receiver>
+
+        <activity android:name=".WebViewActivity" />
 
         <service
             android:name=".DataCollectService"

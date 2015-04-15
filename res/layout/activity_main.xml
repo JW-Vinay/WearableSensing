@@ -14,16 +14,39 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <EditText
-        android:id="@+id/editText1"
+    <Button
+        android:id="@+id/ihealthBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="17dp"
-        android:ems="10" >
+        android:layout_centerInParent="true"
+        android:text="@string/button_label" />
 
-        <requestFocus />
-    </EditText>
+    <TextView
+        android:id="@+id/breathTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ihealthBtn"
+        android:gravity="start" />
+
+<!--     <TextView -->
+<!--         android:id="@+id/respTextView" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/breathTextView" -->
+<!--         android:gravity="start" /> -->
+
+<!--     <TextView -->
+<!--         android:id="@+id/tempTextView" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/respTextView" -->
+<!--         android:gravity="start" /> -->
+
+<!--     <TextView -->
+<!--         android:id="@+id/postureTextView" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/tempTextView" -->
+<!--         android:gravity="start" /> -->
 
 </RelativeLayout>
