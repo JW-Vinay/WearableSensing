@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="actionbar_color">#009999</color>
+    <color name="light_gray">#e0e0e0</color>
+    <color name="btn_default_color">#2ebfc4</color>
+    <color name="gray_2">#D8D8D8</color>
+
+</resources>

@@ -147,5 +147,16 @@ public class NetworkUtils {
 		
 	}
 	
+	/**
+	 * Post stress data
+	 * @param context
+	 * @param object
+	 */
+	public static void postStressMeasurementData(Context context, JSONObject object)
+	{
+		String url = NetworkConstants.BASE_URL + NetworkConstants.POST_PIP_DATA;
+		
+		new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+	}
 	
 }

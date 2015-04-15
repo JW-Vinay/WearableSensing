@@ -9,7 +9,7 @@ public class NetworkConstants {
 	
 	public static enum REQUEST_TYPE
 	{
-		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP, REFRESH_TOKEN
+		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP, REFRESH_TOKEN, POST_PIP
 	}
 	
 	public static final String ACCESS_TOKEN = "access_token";
@@ -40,6 +40,7 @@ public class NetworkConstants {
 	public static final String REQ_PARAM_UNAME = "user_name";
 	public final static String BASE_URL = "http://128.2.83.208:8001/";
 	public final static String POST_BIOMETRIC_ENDPOINT = "api/v1/biometrics/";
+	public final static String POST_PIP_DATA = "api/v1/stress";
 	
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
 	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
