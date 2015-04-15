@@ -1,3 +1,4 @@
+
 # Built application files
 *.apk
 *.ap_
@@ -28,3 +29,5 @@ proguard/
 
 .classpath
 .project
+.settings/
+

@@ -1,7 +1,10 @@
 package com.wearables;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.wearables.networking.NetworkConstants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
@@ -19,14 +23,22 @@ import com.wearables.networking.NetworkingTask;
 import com.wearables.utils.Constants;
 import com.wearables.utils.SharedPrefs;
 
+
 public class MainActivity extends Activity {
 
 	private Button miHealthBtn;
+	
+	private TextView mBreathing, mHeart,mTemp, mPosture;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+//		mTemp = (TextView) findViewById(R.id.tempTextView);
+		mBreathing = (TextView) findViewById(R.id.breathTextView);
+//		mPosture = (TextView) findViewById(R.id.postureTextView);
+//		mHeart = (TextView) findViewById(R.id.respTextView);
 		
 		miHealthBtn = (Button) findViewById(R.id.ihealthBtn);
 		miHealthBtn.setOnClickListener(new OnClickListener() {
@@ -91,6 +103,16 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
+		IntentFilter filter = new IntentFilter("com.wearable.ui");
+		registerReceiver(new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				mBreathing.setText(intent.getExtras().getString("summary"));
+				
+			}
+		}, filter);
     	//IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		//registerReceiver(mReceiver, filter);
 	}

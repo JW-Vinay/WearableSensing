@@ -35,4 +35,12 @@ public class NetworkConstants {
 	
 	/* BP sv*/
 	public static final String BP_SV = "e2f1faf965134081aab954e2b2555b58";
+
+	
+	public static final String REQ_PARAM_UNAME = "user_name";
+	public final static String BASE_URL = "http://128.2.83.208:8001/";
+	public final static String POST_BIOMETRIC_ENDPOINT = "api/v1/biometrics/";
+	
+	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
+	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
 }

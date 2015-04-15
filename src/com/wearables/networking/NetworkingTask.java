@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Timer;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,35 +27,34 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Xml.Encoding;
 
-import com.wearables.RefreshTokenTimer;
-//import com.wearables.Constants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.utils.JSONParser;
 import com.wearables.utils.LogUtils;
 import com.wearables.utils.SharedPrefs;
 
+@SuppressWarnings("deprecation")
 public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 {
 	private final String TAG = getClass().getSimpleName();
-	
+	private REQUEST_TYPE mRequestType;
 	private String mUrl;
 	private boolean mShowloader;
 	private METHOD_TYPE mHttpMethod;
-	private REQUEST_TYPE mRequestType;
 	private ProgressDialog mDialog;
 	private Context mContext;
 	
 	public NetworkingTask(String url,boolean showloader, METHOD_TYPE httpMethod, REQUEST_TYPE requestType,Context mContext)
+
 	{
 		this.mUrl = url;
 		this.mShowloader= showloader;
 		this.mHttpMethod = httpMethod;
 		this.mContext = mContext;
 		this.mRequestType = requestType;
+
 		
 		  if (mShowloader) {
               this.mDialog = new ProgressDialog(mContext);
@@ -217,21 +214,28 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
              }
 
              int responseCode = response.getStatusLine().getStatusCode();
-             if (responseCode == HttpURLConnection.HTTP_OK
-                     || responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                 InputStream is = response.getEntity().getContent();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                 StringBuilder str = new StringBuilder();
-                 String line = null;
-                 while ((line = reader.readLine()) != null) {
-                     str.append(line + "\n");
-                 }
-                 is.close();
-
-                 response_str = str.toString();
-             } else if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
-                 response_str = "No Content";
+             switch(responseCode)
+             {
+             
+	             case HttpURLConnection.HTTP_NO_CONTENT:
+	            	 response_str = "No Content";
+	            	 break;
+	            	 
+	            default:
+	               	   InputStream is = response.getEntity().getContent();
+	                   BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+	                   StringBuilder str = new StringBuilder();
+	                   String line = null;
+	                   while ((line = reader.readLine()) != null) {
+	                       str.append(line + "\n");
+	                   }
+	                   is.close();
+	
+	                   response_str = str.toString();
+	                   break;
+         
              }
+             
          } catch (ClientProtocolException e) {
              response_str = "Network Error" + e.getMessage();
              LogUtils.LOGE(TAG, response_str);
