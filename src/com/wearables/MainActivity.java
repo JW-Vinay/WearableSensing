@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,9 +15,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.wearables.networking.NetworkConstants;
+import com.wearables.networking.NetworkConstants.METHOD_TYPE;
+import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.networking.NetworkUtils;
+import com.wearables.networking.NetworkingTask;
 import com.wearables.utils.Constants;
-import com.wearables.utils.Constants.SERVICE_ACTIONS;
+import com.wearables.utils.SharedPrefs;
+
 
 public class MainActivity extends Activity {
 
@@ -38,19 +45,56 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				
-				Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-				String url = NetworkUtils.generateUrl("", NetworkUtils.getAuthorizationParams()); //TODO: Change here
-				intent.putExtra("url", url);
-				startActivity(intent);
+				String a = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN);
+				// checks if access token exists or not
+				if(TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN)))
+				{
+					Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+					String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL, NetworkUtils.getAuthorizationParams()); //TODO: Change here
+					intent.putExtra("url", url);
+					startActivityForResult(intent, 100);
+				}
+				else
+				{
+					int diff = (int)(System.currentTimeMillis() - SharedPrefs.getInstance(MainActivity.this).getLongParameters(NetworkConstants.TIMESTAMP));
+					
+					/*
+					 * If the time is greater than access token expiry and call refresh the access token 
+					 */
+					if(diff > Constants.EXPIRY_TIME)
+					{
+						String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL,
+			     				NetworkUtils.getRefreshTokenParams(MainActivity.this));
+			     		System.out.println("URL for refresh "+url);
+			     		new NetworkingTask(url, true, METHOD_TYPE.GET,
+			     				REQUEST_TYPE.REFRESH_TOKEN, MainActivity.this)
+			     				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					}
+					else
+					{
+						String accessToken = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.ACCESS_TOKEN);
+						String userID = SharedPrefs.getInstance(MainActivity.this).getParameters(NetworkConstants.USER_ID);
+						String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+								"/" + userID + "/spo2.json" , 
+								NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
 				
+						String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+								"/" + userID + "/bp.json" , 
+								NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+						new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, MainActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, MainActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					}
+				}
+				
+				
+						
 			}
 		});
 		
-		Intent intent = new Intent(this, DataCollectService.class);
-		intent.putExtra(Constants.INTENT_TASK_ACTION, SERVICE_ACTIONS.START_SERVICE);
-		startService(intent);
+//		Intent intent = new Intent(this, DataCollectService.class);
+//		intent.putExtra(Constants.INTENT_TASK_ACTIONs, SERVICE_ACTIONS.START_SERVICE);
+//		startService(intent);
 	}
 	
 	
@@ -76,8 +120,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		switch (resultCode) {
+		switch (requestCode) {
 //		case REQUEST_ENABLE_BT:
 //			if (resultCode == RESULT_OK) {
 //
@@ -85,6 +128,16 @@ public class MainActivity extends Activity {
 //				Toast.makeText(this, "Disabled", Toast.LENGTH_SHORT).show();
 //			}
 //			break;
+		case 100:
+			String code = data.getStringExtra("code");
+			String url = NetworkUtils.generateUrl(
+					NetworkConstants.USER_AUTH_URL,
+					NetworkUtils.getAccessTokenParams(code));
+			new NetworkingTask(url, true, METHOD_TYPE.GET,
+					REQUEST_TYPE.ACCESS_TOKEN, this)
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			break;
+			
 		case 300:
 			//discoverable now
 			break;

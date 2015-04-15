@@ -1,3 +1,4 @@
+
 package com.wearables.utils;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -22,3 +23,4 @@ public class BluetoothPairingReceiver extends BroadcastReceiver {
         }
 	}
 }
+

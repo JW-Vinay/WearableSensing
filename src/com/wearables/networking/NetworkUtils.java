@@ -8,12 +8,13 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.wearables.models.BiometricSummaryModel;
 import com.wearables.models.BiometricBreathingModel;
 import com.wearables.models.BiometricECGModel;
+import com.wearables.models.BiometricSummaryModel;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
-import com.wearables.networking.NetworkConstants.REQUEST_URLS;
+import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.utils.LogUtils;
+import com.wearables.utils.SharedPrefs;
 
 public class NetworkUtils {
 
@@ -36,10 +37,44 @@ public class NetworkUtils {
 	{
 		//TODO: fragment this further to ensure common params are added in only 1 method and invoke them
 		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("client_id", "8ee4d0aac5f64b28a75da8e48ba05de5");
+		data.put("client_id", NetworkConstants.CLIENT_ID);
 		data.put("response_type", "code");
-		data.put("redirect_uri", "");
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put("APIName", NetworkConstants.APIName);
+		return data;
+	}
+	
+	public static HashMap<String , String> getAccessTokenParams(String code){
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
+		data.put("grant_type", "authorization_code");
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put("code", code);
+		return data;
+	}
+	
+	public static HashMap<String, String> getDataParams(String accessToken, String svVal){
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put(NetworkConstants.ACCESS_TOKEN, accessToken);
+		data.put(NetworkConstants.SC, NetworkConstants.SC_VALUE);
+		data.put(NetworkConstants.SV, svVal);
+		return data;
+	}
+	
+	public static HashMap<String , String> getRefreshTokenParams(Context context){
+		HashMap<String, String> data = new HashMap<String, String>();
+		SharedPrefs sp = SharedPrefs.getInstance(context);
 		
+		data.put("client_id", NetworkConstants.CLIENT_ID);
+		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
+		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
+		data.put(NetworkConstants.REFRESH_TOKEN, sp.getParameters(NetworkConstants.REFRESH_TOKEN));
+		data.put("response_type", NetworkConstants.REFRESH_TOKEN);
+		data.put(NetworkConstants.USER_ID, sp.getParameters(NetworkConstants.USER_ID));
 		return data;
 	}
 	
@@ -59,8 +94,8 @@ public class NetworkUtils {
 			JSONObject hdObject = model.getHDJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
 			hdObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
-			new NetworkingTask(hdUrl, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, hdObject);
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(hdUrl, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, hdObject);
 		}
 		catch(JSONException e)
 		{
@@ -81,7 +116,7 @@ public class NetworkUtils {
 			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_ENDPOINT;
 			JSONObject object = model.getJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 		}
 		catch(JSONException e)
 		{
@@ -103,7 +138,7 @@ public class NetworkUtils {
 			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_ENDPOINT;
 			JSONObject object = model.getJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, context, REQUEST_URLS.POST_BIOMETRIC_ZEPHYR).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 		}
 		catch(JSONException e)
 		{
