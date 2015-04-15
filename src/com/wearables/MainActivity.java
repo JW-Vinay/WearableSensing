@@ -16,6 +16,7 @@ import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.networking.NetworkingTask;
+import com.wearables.utils.Constants;
 import com.wearables.utils.SharedPrefs;
 
 public class MainActivity extends Activity {

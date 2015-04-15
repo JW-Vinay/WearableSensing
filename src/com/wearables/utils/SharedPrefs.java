@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.wearables.Constants;
+import com.wearables.utils.Constants;
 
 public class SharedPrefs {
 	private static SharedPrefs instance = null;

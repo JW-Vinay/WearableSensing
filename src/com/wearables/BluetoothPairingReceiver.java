@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
+import com.wearables.utils.Constants;
+import com.wearables.utils.Constants.SERVICE_ACTIONS;
 
 public class BluetoothPairingReceiver extends BroadcastReceiver {
 	@Override

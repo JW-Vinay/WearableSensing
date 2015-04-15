@@ -3,23 +3,22 @@ package com.wearables;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import com.wearables.Constants.SERVICE_ACTIONS;
-import com.wearables.zephyr.BTClient;
-import com.wearables.zephyr.ConnectListenerImpl;
-import com.wearables.zephyr.ConnectedListener;
-import com.wearables.zephyr.ZephyrProtocol;
-
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wearables.utils.Constants;
+import com.wearables.utils.Constants.SERVICE_ACTIONS;
+import com.wearables.zephyr.BTClient;
+import com.wearables.zephyr.ConnectListenerImpl;
+import com.wearables.zephyr.ConnectedListener;
+import com.wearables.zephyr.ZephyrProtocol;
 
 /**
  * This service pulls RSS content from a web site URL contained in the incoming Intent (see

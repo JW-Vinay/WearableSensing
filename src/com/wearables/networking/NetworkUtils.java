@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 
-import com.wearables.Constants;
 import com.wearables.utils.SharedPrefs;
 
 public class NetworkUtils {
