@@ -31,3 +31,5 @@ proguard/
 .project
 .settings/
 
+
+lint.xml
