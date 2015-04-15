@@ -107,10 +107,6 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					System.out.println("default");
 					break;
 			}
-			System.out.println("Refresh TOKEN");
-			System.out.println("rtoken "+ SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN));
-			System.out.println("ACCESS TOKEN");
-			System.out.println(SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -133,7 +129,6 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 				case REFRESH_TOKEN:
 					String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
 					String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
-					String refreshToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.REFRESH_TOKEN);
 
 					
 //					//create a handler in an activity or fragment
