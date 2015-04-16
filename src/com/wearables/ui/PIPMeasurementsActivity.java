@@ -277,7 +277,7 @@ public class PIPMeasurementsActivity extends Activity implements
 				// Log.e("Steady", Integer.toString(steadycount));
 			}
 			try {
-				stressdata.put("user_name", "user");
+				stressdata.put("user_name", "mshrimal");
 				stressdata.put("stress_score", 0);
 				stressdata.put("skin_conductance", 0);
 				stressdata.put("duration", 120);
@@ -296,7 +296,7 @@ public class PIPMeasurementsActivity extends Activity implements
 
 			textViewStatus.setText("Streaming: Inactive");
 			try {
-				stressdata.put("user_name", "user");
+				stressdata.put("user_name", "mshrimal");
 				stressdata.put("stress_score", 0);
 				stressdata.put("skin_conductance", 0);
 				stressdata.put("duration", 120);
