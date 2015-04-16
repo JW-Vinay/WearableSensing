@@ -1,4 +1,4 @@
-package com.wearables;
+package com.wearables.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.wearables.DataCollectService;
+import com.wearables.R;
 import com.wearables.networking.NetworkConstants;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
@@ -29,7 +31,15 @@ public class MainActivity extends Activity implements OnClickListener {
 			mDashboardBtn;
 
 	private TextView mBioMetricDetailsView;
+	private BroadcastReceiver mReceiver =new BroadcastReceiver() {
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			mBioMetricDetailsView.setText(intent.getExtras().getString(
+					"summary"));
+
+		}};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,6 +131,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 
+		Intent intent = null;
 		switch (v.getId()) {
 		case R.id.ihealthBPBtn:
 		case R.id.ihealthBOBtn:
@@ -129,6 +140,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.dashboardBtn:
 			break;
 		case R.id.pipBtn:
+			 intent = new Intent(this, PIPMeasurementsActivity.class);
+			 startActivity(intent);
 			break;
 		}
 	}
@@ -148,20 +161,16 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		super.onStart();
 		IntentFilter filter = new IntentFilter("com.wearable.ui");
-		registerReceiver(new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-
-				mBioMetricDetailsView.setText(intent.getExtras().getString(
-						"summary"));
-
-			}
-		}, filter);
+		registerReceiver(mReceiver, filter);
 		// IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		// registerReceiver(mReceiver, filter);
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		unregisterReceiver(mReceiver);
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
