@@ -1,9 +1,13 @@
-package com.wearables;
+package com.wearables.ui;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import com.wearables.R;
+import com.wearables.R.id;
+import com.wearables.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

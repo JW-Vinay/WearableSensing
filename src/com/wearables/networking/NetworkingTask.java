@@ -35,7 +35,6 @@ import com.wearables.utils.JSONParser;
 import com.wearables.utils.LogUtils;
 import com.wearables.utils.SharedPrefs;
 
-@SuppressWarnings("deprecation")
 public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 {
 	private final String TAG = getClass().getSimpleName();
@@ -104,14 +103,14 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 				case REFRESH_TOKEN:
 					jParser.parseRefreshToken(response);
 				default:
-					System.out.println("default");
+//					System.out.println("default");
 					break;
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//TODO: manipulate responses
+
 		return null;
 	}
 	
@@ -123,7 +122,11 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		{
 			if(mDialog.isShowing() && mShowloader)
 				mDialog.dismiss();
+		}
+		catch(Exception e)
+		{
 			
+		}	
 			switch(mRequestType){
 				case ACCESS_TOKEN:
 				case REFRESH_TOKEN:
@@ -146,19 +149,21 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
 							"/" + userID + "/bp.json" , 
 							NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+					//TODO: Invoke based on action performed
 					new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					break;
+					
 				case SP02:
 					break;
-					
+				case BP:	
+					break;
+				
+				default:
+						break;
 			}
 		
-		}
-		catch(Exception e)
-		{
-			
-		}
+		
 		
 		
 		
