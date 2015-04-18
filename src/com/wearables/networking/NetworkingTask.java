@@ -102,6 +102,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					break;
 				case REFRESH_TOKEN:
 					jParser.parseRefreshToken(response);
+					break;
 				default:
 //					System.out.println("default");
 					break;
