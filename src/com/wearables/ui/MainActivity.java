@@ -182,13 +182,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
-		// case REQUEST_ENABLE_BT:
-		// if (resultCode == RESULT_OK) {
-		//
-		// } else {
-		// Toast.makeText(this, "Disabled", Toast.LENGTH_SHORT).show();
-		// }
-		// break;
+		
 		case 100:
 			String code = data.getStringExtra("code");
 			int id = data.getIntExtra("id", -1);
