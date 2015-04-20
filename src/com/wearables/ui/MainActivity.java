@@ -28,7 +28,7 @@ import com.wearables.utils.SharedPrefs;
 public class MainActivity extends Activity implements OnClickListener {
 
 	private Button mBPMonitoringBtn, mBloodOxygenMonitoringBtn, mPiPBtn,
-			mDashboardBtn;
+			mDashboardBtn, mWithingsBtn;
 
 	private TextView mBioMetricDetailsView;
 	private BroadcastReceiver mReceiver =new BroadcastReceiver() {
@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		setActionBar();
 		mBioMetricDetailsView = (TextView) findViewById(R.id.biometricDetailsView);
 
+		mWithingsBtn = (Button) findViewById(R.id.withingsBtn);
+		mWithingsBtn.setOnClickListener(this);
 		mBPMonitoringBtn = (Button) findViewById(R.id.ihealthBPBtn);
 		mBloodOxygenMonitoringBtn = (Button) findViewById(R.id.ihealthBOBtn);
 		mBPMonitoringBtn.setOnClickListener(this);
@@ -140,6 +142,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		Intent intent = null;
 		switch (v.getId()) {
+		case R.id.withingsBtn:
+			break;
 		case R.id.ihealthBPBtn:
 		case R.id.ihealthBOBtn:
 			initiateDataPush(v.getId());

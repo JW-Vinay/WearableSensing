@@ -9,6 +9,7 @@
 	<string name="tag_BP">Measure Blood Pressue</string>
 	<string name="tag_BO">Measure Blood Oxygen Levels</string>
 	<string name="tag_PIP">Measure Caregiver Stress Levels</string>
+	<string name="tag_withings">Measure Weight</string>
 	<string name="tag_Dasboard">Load Dashboard</string>
 	<string name="tag_measure">Click to Measure</string>
 	<string name="tag_ready">Ready</string>
