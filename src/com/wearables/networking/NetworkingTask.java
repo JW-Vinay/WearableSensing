@@ -86,7 +86,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		if(params != null && params.length > 0)
 			reqObject = (JSONObject)params[0];
 		String response = establishConnection(reqObject);
-		System.out.println("response:\n" + response);
+//		System.out.println("response:\n" + response);
 		JSONParser jParser;
 		try {
 			jParser = new JSONParser(this.mContext);
@@ -217,6 +217,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
              }
 
              int responseCode = response.getStatusLine().getStatusCode();
+//             System.out.println("Response Code: " + responseCode);
              switch(responseCode)
              {
              

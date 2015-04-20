@@ -184,30 +184,27 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (requestCode) {
 		
 		case 100:
-			String code = data.getStringExtra("code");
-			int id = data.getIntExtra("id", -1);
-			//int id = 0;
-//			if(idString == null){
-//				//TODO: Handle this case. This is hardcoded
-//				id = R.id.ihealthBPBtn;
-//			}else{
-//				id = Integer.parseInt(data.getStringExtra("id"));
-//			}
-			
-			if(R.id.ihealthBPBtn == id){
-				String url = NetworkUtils.generateUrl(
-						NetworkConstants.USER_AUTH_URL,
-						NetworkUtils.getAccessTokenParams(code));
-				new NetworkingTask(url, true, METHOD_TYPE.GET,
-						REQUEST_TYPE.ACCESS_TOKEN_BP, this)
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			}else{
-				String url = NetworkUtils.generateUrl(
-						NetworkConstants.USER_AUTH_URL,
-						NetworkUtils.getAccessTokenParams(code));
-				new NetworkingTask(url, true, METHOD_TYPE.GET,
-						REQUEST_TYPE.ACCESS_TOKEN_SPO2, this)
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			if(resultCode == RESULT_OK)
+			{
+				String code = data.getStringExtra("code");
+				int id = data.getIntExtra("id", -1);
+				
+				if(R.id.ihealthBPBtn == id){
+					String url = NetworkUtils.generateUrl(
+							NetworkConstants.USER_AUTH_URL,
+							NetworkUtils.getAccessTokenParams(code));
+					new NetworkingTask(url, true, METHOD_TYPE.GET,
+							REQUEST_TYPE.ACCESS_TOKEN_BP, this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}else{
+					String url = NetworkUtils.generateUrl(
+							NetworkConstants.USER_AUTH_URL,
+							NetworkUtils.getAccessTokenParams(code));
+					new NetworkingTask(url, true, METHOD_TYPE.GET,
+							REQUEST_TYPE.ACCESS_TOKEN_SPO2, this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+
 			}
 			
 			break;

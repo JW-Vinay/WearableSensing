@@ -155,7 +155,7 @@ public class NetworkUtils {
 	public static void postStressMeasurementData(Context context, JSONObject object)
 	{
 		String url = NetworkConstants.BASE_URL + NetworkConstants.POST_PIP_DATA;
-		
+//		url  = "http://128.2.83.208:8001/api/v1/stress/";
 		new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_PIP, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 	}
 	
