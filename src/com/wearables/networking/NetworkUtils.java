@@ -135,7 +135,7 @@ public class NetworkUtils {
 	{
 		try
 		{
-			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_ENDPOINT;
+			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_PRECISE_ENDPOINT;
 			JSONObject object = model.getJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
 			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
