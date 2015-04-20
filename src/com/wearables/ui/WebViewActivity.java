@@ -21,7 +21,7 @@ public class WebViewActivity extends Activity
 	private WebView mWebView;
 	private String mUrl = "";
 	private boolean flag= false;
-	
+	private int mId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,6 +30,7 @@ public class WebViewActivity extends Activity
 		if(getIntent().getExtras() != null)
 		mWebView = (WebView) findViewById(R.id.webView);
 		String url = getIntent().getStringExtra("url");
+		mId = getIntent().getIntExtra("id", -1);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		
 		mWebView.setWebViewClient(new WebViewClient()
@@ -43,6 +44,7 @@ public class WebViewActivity extends Activity
 					String code=(url.split("=")[1]);
 					Intent intent = new Intent();
 					intent.putExtra("code", code);
+					intent.putExtra("id", mId);
 					setResult(RESULT_OK, intent);
 					finish();
 					

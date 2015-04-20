@@ -91,7 +91,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		try {
 			jParser = new JSONParser(this.mContext);
 			switch(mRequestType){
-				case ACCESS_TOKEN:
+				case ACCESS_TOKEN_BP:
+				case ACCESS_TOKEN_SPO2:
 					jParser.parseResponse(response);
 					break;
 				case SP02:
@@ -100,8 +101,10 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 				case BP:
 					jParser.parseBP(response);
 					break;
-				case REFRESH_TOKEN:
+				case REFRESH_TOKEN_BP:
+				case REFRESH_TOKEN_BO:
 					jParser.parseRefreshToken(response);
+					break;
 				default:
 //					System.out.println("default");
 					break;
@@ -127,33 +130,33 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		{
 			
 		}	
-			switch(mRequestType){
-				case ACCESS_TOKEN:
-				case REFRESH_TOKEN:
-					String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
-					String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
+		String accessToken = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.ACCESS_TOKEN);
+		String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
+		String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+				"/" + userID + "/spo2.json" , 
+				NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
 
-					
-//					//create a handler in an activity or fragment
-//					Handler handler = new Handler();
-//					
-//					//create a timer task and pass the handler in
-//					RefreshTokenTimer task = new RefreshTokenTimer(handler, this.mContext);
-//					//use timer to run the task every 10 seconds
-//					new Timer().scheduleAtFixedRate(task, 0, 10000);
-					
-					String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
-							"/" + userID + "/spo2.json" , 
-							NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
-			
-					String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
-							"/" + userID + "/bp.json" , 
-							NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
-					//TODO: Invoke based on action performed
-					new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+				"/" + userID + "/bp.json" , 
+				NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+			switch(mRequestType){
+				case ACCESS_TOKEN_BP:
 					new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					break;
-					
+				case ACCESS_TOKEN_SPO2:
+					new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				case REFRESH_TOKEN_BP:
+//					String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+//							"/" + userID + "/bp.json" , 
+//							NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+					new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					break;
+				case REFRESH_TOKEN_BO:
+//					String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
+//							"/" + userID + "/spo2.json" , 
+//							NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
+					new NetworkingTask(SPO2_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.SP02, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					break;
 				case SP02:
 					break;
 				case BP:	

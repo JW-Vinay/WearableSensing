@@ -33,9 +33,9 @@ public class RefreshTokenTimer extends TimerTask {
 	     		String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL,
 	     				NetworkUtils.getRefreshTokenParams(mContext));
 	     		System.out.println("URL for refresh "+url);
-	     		new NetworkingTask(url, true, METHOD_TYPE.GET,
-	     				REQUEST_TYPE.REFRESH_TOKEN, mContext)
-	     				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//	     		new NetworkingTask(url, true, METHOD_TYPE.GET,
+//	     				REQUEST_TYPE.REFRESH_TOKEN, mContext)
+//	     				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	         }
 	      });
 	}

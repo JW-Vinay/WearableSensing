@@ -39,6 +39,7 @@ public class BiometricBOModel implements Parcelable{
 
 	public BiometricBOModel(int mBloodOxygen, long mTimeStampRecorded) {
 		super();
+		this.mBloodOxygen = mBloodOxygen;
 		this.mTimeStampRecorded = mTimeStampRecorded;
 		this.setmFormattedTime(Utils.getFormattedTime(mTimeStampRecorded));
 	}

@@ -67,7 +67,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void initiateDataPush(int id) {
 		if (TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this)
 				.getParameters(NetworkConstants.ACCESS_TOKEN))) {
-			loadWebViewForAuth();
+			loadWebViewForAuth(id);
 
 		} else {
 			int diff = (int) (System.currentTimeMillis() - SharedPrefs
@@ -83,9 +83,15 @@ public class MainActivity extends Activity implements OnClickListener {
 						NetworkConstants.USER_AUTH_URL,
 						NetworkUtils.getRefreshTokenParams(MainActivity.this));
 
-				new NetworkingTask(url, true, METHOD_TYPE.GET,
-						REQUEST_TYPE.REFRESH_TOKEN, MainActivity.this)
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				if (id == R.id.ihealthBOBtn) {
+					new NetworkingTask(url, true, METHOD_TYPE.GET,
+							REQUEST_TYPE.REFRESH_TOKEN_BP, MainActivity.this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}else{
+					new NetworkingTask(url, true, METHOD_TYPE.GET,
+							REQUEST_TYPE.REFRESH_TOKEN_BO, MainActivity.this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
 			} else {
 				String accessToken = SharedPrefs.getInstance(MainActivity.this)
 						.getParameters(NetworkConstants.ACCESS_TOKEN);
@@ -118,13 +124,14 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	}
 
-	private void loadWebViewForAuth() {
+	private void loadWebViewForAuth(int id) {
 		Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
 		String url = NetworkUtils.generateUrl(NetworkConstants.USER_AUTH_URL,
 				NetworkUtils.getAuthorizationParams()); // TODO:
 														// Change
 														// here
 		intent.putExtra("url", url);
+		intent.putExtra("id", id);
 		startActivityForResult(intent, 100);
 	}
 
@@ -184,12 +191,31 @@ public class MainActivity extends Activity implements OnClickListener {
 		// break;
 		case 100:
 			String code = data.getStringExtra("code");
-			String url = NetworkUtils.generateUrl(
-					NetworkConstants.USER_AUTH_URL,
-					NetworkUtils.getAccessTokenParams(code));
-			new NetworkingTask(url, true, METHOD_TYPE.GET,
-					REQUEST_TYPE.ACCESS_TOKEN, this)
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			int id = data.getIntExtra("id", -1);
+			//int id = 0;
+//			if(idString == null){
+//				//TODO: Handle this case. This is hardcoded
+//				id = R.id.ihealthBPBtn;
+//			}else{
+//				id = Integer.parseInt(data.getStringExtra("id"));
+//			}
+			
+			if(R.id.ihealthBPBtn == id){
+				String url = NetworkUtils.generateUrl(
+						NetworkConstants.USER_AUTH_URL,
+						NetworkUtils.getAccessTokenParams(code));
+				new NetworkingTask(url, true, METHOD_TYPE.GET,
+						REQUEST_TYPE.ACCESS_TOKEN_BP, this)
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}else{
+				String url = NetworkUtils.generateUrl(
+						NetworkConstants.USER_AUTH_URL,
+						NetworkUtils.getAccessTokenParams(code));
+				new NetworkingTask(url, true, METHOD_TYPE.GET,
+						REQUEST_TYPE.ACCESS_TOKEN_SPO2, this)
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}
+			
 			break;
 
 		case 300:
