@@ -52,6 +52,7 @@ import com.galvanic.pipsdk.PIP.PipManagerListener;
 import com.galvanic.pipsdk.PIP.PipStandardAnalyzer;
 import com.wearables.R;
 import com.wearables.networking.NetworkUtils;
+import com.wearables.utils.Utils;
 
 /* The application's user interface must inherit and implement the
  * PipManagerListener, PipConnectionListener and PipAnalyzerListener
@@ -284,7 +285,8 @@ public class PIPMeasurementsActivity extends Activity implements
 	@Override
 	public void onAnalyzerOutputEvent(int pipID, int status) {
 		stressdata = new JSONObject();
-		if (pipManager.getPip(pipID).isActive()) {
+        String currentTime = Utils.getFormattedTime(System.currentTimeMillis());
+        if (pipManager.getPip(pipID).isActive()) {
 			// Retrieve the analyzer's current output
 			ArrayList<PipAnalyzerOutput> op = pipManager.getPip(pipID)
 					.getAnalyzerOutput();
@@ -298,6 +300,7 @@ public class PIPMeasurementsActivity extends Activity implements
 				textViewStatus.setText("Streaming: Relaxing");
 				relaxedcount++;
                 try {
+
                     stressdata.put("user_name", "mshrimal");
                     stressdata.put("stress_score", String.valueOf(0));
                     stressdata.put("skin_conductance", String.valueOf(0));
@@ -305,8 +308,8 @@ public class PIPMeasurementsActivity extends Activity implements
                     stressdata.put("number_relax_events", String.valueOf(relaxedcount));
                     stressdata.put("number_stress_events", String.valueOf(stressedcount));
                     stressdata.put("number_steady_events", String.valueOf(steadycount));
-                    stressdata.put("time_recorded", "2015-04-12 20:52:41");
-                    stressdata.put("time_received", "2015-04-12 20:52:48");
+                    stressdata.put("time_recorded", currentTime);
+                    stressdata.put("time_received", currentTime);
 
                     NetworkUtils.postStressMeasurementData(
                             PIPMeasurementsActivity.this, stressdata);
@@ -325,8 +328,8 @@ public class PIPMeasurementsActivity extends Activity implements
                     stressdata.put("number_relax_events", String.valueOf(relaxedcount));
                     stressdata.put("number_stress_events", String.valueOf(stressedcount));
                     stressdata.put("number_steady_events", String.valueOf(steadycount));
-                    stressdata.put("time_recorded", "2015-04-12 20:52:41");
-                    stressdata.put("time_received", "2015-04-12 20:52:48");
+                    stressdata.put("time_recorded", currentTime);
+                    stressdata.put("time_received", currentTime);
 
                     NetworkUtils.postStressMeasurementData(
                             PIPMeasurementsActivity.this, stressdata);
@@ -353,8 +356,8 @@ public class PIPMeasurementsActivity extends Activity implements
 				stressdata.put("number_relax_events", -1);
 				stressdata.put("number_stress_events", -1);
 				stressdata.put("number_steady_events", -1);
-				stressdata.put("time_recorded", "2015-04-12 20:52:22");
-				stressdata.put("time_received", "2015-04-12 20:52:52");
+				stressdata.put("time_recorded", currentTime);
+				stressdata.put("time_received", currentTime);
 
 				NetworkUtils.postStressMeasurementData(
 						PIPMeasurementsActivity.this, stressdata);
