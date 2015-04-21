@@ -205,7 +205,7 @@ import com.wearables.utils.LogUtils;
     					
     					short ECGSample[] = new short[63];
 						ECGSample = ecgInfoPacket.getECGSamples(msg.getBytes());
-						long timestamp = ecgInfoPacket.getMsofDay(msg.getBytes());
+						long timestamp = System.currentTimeMillis();
 						int numSamples = (int)ecgInfoPacket.NUM_ECG_SAMPLES_PER_PACKET;
 						int sequenceNo = ecgInfoPacket.getSeqNum(msg.getBytes()); 	
     					String ecgtext = "";
@@ -238,7 +238,7 @@ import com.wearables.utils.LogUtils;
 						   					
     					short BreathingSample[] = new short[18];
 						BreathingSample = breathingInfoPacket.getBreathingSamples(msg.getBytes());
-						long timestamp = breathingInfoPacket.getMsofDay(msg.getBytes());
+						long timestamp = System.currentTimeMillis();
 						int numSamples = (int)breathingInfoPacket.NUM_BREATHING_SAMPLES_PER_PACKET;
 						int sequenceNo = breathingInfoPacket.getSeqNum(msg.getBytes());
 						

@@ -84,7 +84,7 @@ public class NetworkUtils {
 	 * @param model
 	 * @param url
 	 */
-	public static void postBiometricData(Context context, BiometricSummaryModel model)
+	public static void postBiometricData(Context context, BiometricSummaryModel model, NetworkCompletionInterface listener)
 	{
 		try
 		{
@@ -93,9 +93,9 @@ public class NetworkUtils {
 			JSONObject object = model.getJSON();
 			JSONObject hdObject = model.getHDJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			hdObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
-			new NetworkingTask(hdUrl, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, hdObject);
+			hdObject.put("userId", "mshrimal");
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(hdUrl, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, hdObject);
 		}
 		catch(JSONException e)
 		{
@@ -109,14 +109,14 @@ public class NetworkUtils {
 	 * @param model
 	 * @param url
 	 */
-	public static void postBiometricData(Context context, BiometricECGModel model)
+	public static void postBiometricData(Context context, BiometricECGModel model, NetworkCompletionInterface listener)
 	{
 		try
 		{
-			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_ENDPOINT;
+			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_PRECISE_ENDPOINT;
 			JSONObject object = model.getJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 		}
 		catch(JSONException e)
 		{
@@ -131,14 +131,14 @@ public class NetworkUtils {
 	 * @param model
 	 * @param url
 	 */
-	public static void postBiometricData(Context context, BiometricBreathingModel model)
+	public static void postBiometricData(Context context, BiometricBreathingModel model, NetworkCompletionInterface listener)
 	{
 		try
 		{
 			String url = NetworkConstants.BASE_URL + NetworkConstants.POST_BIOMETRIC_PRECISE_ENDPOINT;
 			JSONObject object = model.getJSON();
 			object.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
-			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+			new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR, context, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 		}
 		catch(JSONException e)
 		{

@@ -40,6 +40,8 @@ public class MainActivity extends Activity implements OnClickListener {
 					"summary"));
 
 		}};
+	
+		private int mViewClicked = -1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -145,6 +147,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.withingsBtn:
 			break;
 		case R.id.ihealthBPBtn:
+			mViewClicked = v.getId();
+			intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
+			 startActivity(intent);
+			break;
 		case R.id.ihealthBOBtn:
 			initiateDataPush(v.getId());
 			break;
@@ -173,6 +179,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onStart();
 		IntentFilter filter = new IntentFilter("com.wearable.ui");
 		registerReceiver(mReceiver, filter);
+		
+		if(mViewClicked != -1)
+		{
+			initiateDataPush(mViewClicked);
+			mViewClicked = -1;
+		}
 		// IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		// registerReceiver(mReceiver, filter);
 	}
@@ -187,6 +199,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		
+//		case 200:
+//			System.out.println("resultCode: " + resultCode);
+//			break;
 		case 100:
 			if(resultCode == RESULT_OK)
 			{

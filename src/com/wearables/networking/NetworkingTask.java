@@ -44,8 +44,13 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 	private METHOD_TYPE mHttpMethod;
 	private ProgressDialog mDialog;
 	private Context mContext;
+	private NetworkCompletionInterface mListener;
 	
 	public NetworkingTask(String url,boolean showloader, METHOD_TYPE httpMethod, REQUEST_TYPE requestType,Context mContext)
+	{
+		this(url, showloader, httpMethod, requestType, mContext, null);
+	}
+	public NetworkingTask(String url,boolean showloader, METHOD_TYPE httpMethod, REQUEST_TYPE requestType,Context mContext, NetworkCompletionInterface listener)
 
 	{
 		this.mUrl = url;
@@ -53,7 +58,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		this.mHttpMethod = httpMethod;
 		this.mContext = mContext;
 		this.mRequestType = requestType;
-
+		this.mListener = listener;
 		
 		  if (mShowloader) {
               this.mDialog = new ProgressDialog(mContext);
@@ -86,7 +91,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		if(params != null && params.length > 0)
 			reqObject = (JSONObject)params[0];
 		String response = establishConnection(reqObject);
-//		System.out.println("response:\n" + response);
+		System.out.println("response: " + response);
 		JSONParser jParser;
 		try {
 			jParser = new JSONParser(this.mContext);
@@ -161,7 +166,10 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					break;
 				case BP:	
 					break;
-				
+				case POST_BIOMETRIC_ZEPHYR:
+					if(mListener != null)
+						mListener.onTaskComplete();
+					break;
 				default:
 						break;
 			}

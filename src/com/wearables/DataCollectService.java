@@ -14,6 +14,10 @@ import android.widget.Toast;
 import com.wearables.models.BiometricBreathingModel;
 import com.wearables.models.BiometricECGModel;
 import com.wearables.models.BiometricSummaryModel;
+import com.wearables.models.NetworkWrapperObject;
+import com.wearables.networking.NetworkCompletionInterface;
+import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
+import com.wearables.networking.NetworkQueue;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
@@ -31,7 +35,7 @@ import com.wearables.zephyr.ZephyrProtocol;
  * Constants.BROADCAST_ACTION.
  *
  */
-public class DataCollectService extends IntentService {
+public class DataCollectService extends IntentService implements NetworkCompletionInterface{
     // Used to write to the system log from this class.
 //    public static final String LOG_TAG = "DataCollectService";
 	private final String TAG = getClass().getSimpleName();
@@ -50,12 +54,14 @@ public class DataCollectService extends IntentService {
 	
 //	private final int REQUEST_ENABLE_BT = 100;
 	
-	private BiometricSummaryModel mBioMetricModel;
+//	private BiometricSummaryModel mBioMetricModel;
 	private 		BluetoothAdapter mBluetoothAdapter;
 	BTClient _bt;
 	ZephyrProtocol _protocol;
 	ConnectedListener<BTClient> _listener;
 	private Handler mHandler = new Handler();
+	private NetworkQueue mNetworkQueue;
+	
 	//Zephyr BH3
 	
     /**
@@ -66,6 +72,7 @@ public class DataCollectService extends IntentService {
     public DataCollectService() {
 
         super("DataCollectService");
+        mNetworkQueue = NetworkQueue.getInstance();
     }
 
     @Override
@@ -129,14 +136,34 @@ public class DataCollectService extends IntentService {
 		
 		@Override
 		public void run() {
-			if(mBioMetricModel != null)
+			NetworkWrapperObject object = mNetworkQueue.getItem();
+			boolean isRunning = mNetworkQueue.ismIsTaskRunning();
+			if(object != null && !isRunning)
 			{
-				System.out.println("API INvoked");
-				NetworkUtils.postBiometricData(DataCollectService.this, mBioMetricModel);
-				mHandler.removeCallbacks(null);
-				mHandler.postDelayed(mPostRunnable, Constants.INTERVAL_MILLIS);
+//				System.out.println("API INvoked");
+				REQUEST_TYPE type = object.getmType();
+				switch(type)
+				{
+				 case POST_BIOMETRIC_ZEPHYR:
+					mNetworkQueue.setmIsTaskRunning(true); 
+					Object postObject = object.getmObject();
+					if(postObject instanceof BiometricSummaryModel)
+						NetworkUtils.postBiometricData(DataCollectService.this, (BiometricSummaryModel)object.getmObject(), DataCollectService.this);
+					else if(postObject instanceof BiometricECGModel)
+						NetworkUtils.postBiometricData(DataCollectService.this, (BiometricECGModel)object.getmObject(), DataCollectService.this);
+					else if(postObject instanceof BiometricBreathingModel)	
+						NetworkUtils.postBiometricData(DataCollectService.this, (BiometricBreathingModel)object.getmObject(), DataCollectService.this);
+					break;
+				 case POST_PIP:
+					 mNetworkQueue.setmIsTaskRunning(true);
+					 break;
+				default:
+						 break;
+				}
 			}
-			
+			mHandler.removeCallbacks(null);
+			mHandler.postDelayed(mPostRunnable, Constants.INTERVAL_MILLIS);
+
 		}
 	};
 
@@ -148,9 +175,10 @@ public class DataCollectService extends IntentService {
 	   		{
 		  		case BREATH_PACKET:
 		  			String breathText = msg.getData().getString(Constants.INTENT_BREATHING);
-		       		System.out.println("" + "test" + breathText);
+//		       		System.out.println("" + "test" + breathText);
 		       		BiometricBreathingModel model_breath = msg.getData().getParcelable(Constants.INTENT_BREATHING_MODEL);
-		       		NetworkUtils.postBiometricData(DataCollectService.this, model_breath);
+//		       		NetworkUtils.postBiometricData(DataCollectService.this, model_breath);
+		       		mNetworkQueue.addToQueue(model_breath, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR);
 		       		intent.setAction("com.wearable.ui");
 		       		intent.putExtra("breathing", breathText);
 		       		sendBroadcast(intent);
@@ -159,9 +187,10 @@ public class DataCollectService extends IntentService {
 		  			break;
 		   		case ECG_PACKET:
 		  			String ecgText = msg.getData().getString(Constants.INTENT_ECG);
-		       		System.out.println("" + "test" + ecgText);
+//		       		System.out.println("" + "test" + ecgText);
 		       		BiometricECGModel model_ecg = msg.getData().getParcelable(Constants.INTENT_ECG_MODEL);
-		       		NetworkUtils.postBiometricData(DataCollectService.this, model_ecg);
+//		       		NetworkUtils.postBiometricData(DataCollectService.this, model_ecg);
+		       		mNetworkQueue.addToQueue(model_ecg, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR);
 		       		intent.setAction("com.wearable.ui");
 		       		intent.putExtra("ECG", ecgText);
 		       		sendBroadcast(intent);	   			
@@ -170,9 +199,11 @@ public class DataCollectService extends IntentService {
 		   			break;
 		   		case SUMMARY_DATA_PACKET:
 		       		String summaryText = msg.getData().getString(Constants.INTENT_SUMMARY);
-		       		System.out.println("" + "test" + summaryText);
+//		       		System.out.println("" + "test" + summaryText);
 		       		BiometricSummaryModel model_summary = msg.getData().getParcelable(Constants.INTENT_SUMMARY_MODEL);
-		       		NetworkUtils.postBiometricData(DataCollectService.this, model_summary);       		
+		       		mNetworkQueue.addToQueue(model_summary, REQUEST_TYPE.POST_BIOMETRIC_ZEPHYR);
+//		       		mBioMetricModel = 
+//		       		NetworkUtils.postBiometricData(DataCollectService.this, model_summary);       		
 		       		intent.setAction("com.wearable.ui");
 		       		intent.putExtra("summary", summaryText);
 		       		sendBroadcast(intent);
@@ -263,6 +294,13 @@ public class DataCollectService extends IntentService {
 		{
 			_bt.start();
 		}
+	}
+
+	@Override
+	public void onTaskComplete() {
+		mNetworkQueue.setmIsTaskRunning(false);
+		mHandler.removeCallbacks(null);
+		mHandler.postDelayed(mPostRunnable, Constants.INTERVAL_MILLIS);
 	}
 }
 
