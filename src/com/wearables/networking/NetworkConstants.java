@@ -36,6 +36,12 @@ public class NetworkConstants {
 	/* BP sv*/
 	public static final String BP_SV = "e2f1faf965134081aab954e2b2555b58";
 
+	/* Withings auth */
+	public static final String CONSUMER_KEY = "cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411";
+	public static final String CONSUMER_SECRET = "918de5c8eb71fc0e2260c8117185773db81c4706cfb727c4524cf96";
+	
+	public static final String CALLBACK_URL = "http://my.withings.com/en/utils/graph?userid=7109101&publickey=36525c7a7de36cc7&massUnit=lb&forcedisplay=fm";
+	public static final String WITHINGS_URL_DATA = "http://wbsapi.withings.net/measure?action=getmeas&oauth_consumer_key=cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411&oauth_nonce=3b5f6ada7d7147d8fa4a2786aab1df49&oauth_signature=OtHDuQ%2BHw0joHcRZynpsXXtQLmY%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1429592489&oauth_token=ef8238d382e0b4796c4ccccfb2d51f287ffc2322c1190cecc01d83c21&oauth_version=1.0&userid=7109101";
 	
 	public static final String REQ_PARAM_UNAME = "user_name";
 	public final static String BASE_URL = "http://128.2.83.208:8001/";

@@ -143,6 +143,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		Intent intent = null;
 		switch (v.getId()) {
 		case R.id.withingsBtn:
+			//Edit
+			
 			break;
 		case R.id.ihealthBPBtn:
 		case R.id.ihealthBOBtn:
