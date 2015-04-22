@@ -74,7 +74,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initiateDataPush(int id) {
-		long currentTime = System.currentTimeMillis()/1000;
 		
 		if (TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this)
 				.getParameters(NetworkConstants.ACCESS_TOKEN))) {
