@@ -51,7 +51,7 @@ public class JSONParser {
 
 		}
 	}
-
+	
 	public void parseSP02(String response) {
 		// TODO Auto-generated method stub
 		try {
@@ -76,6 +76,30 @@ public class JSONParser {
 		}
 	}
 
+	public void parseWithings(String response) {
+		int temp;
+		double kg;
+		try {
+			JSONObject jObject = new JSONObject(response);
+			if (jObject != null) {
+				JSONObject measuregrps = jObject.getJSONObject("measuregrps");
+				mTimeStampRecorded = measuregrps.getInt("date");
+				JSONArray measures = measuregrps.getJSONArray("measures");
+				int n = measures.length();
+				for (int i = 0; i < n; i++) {
+					JSONObject weightData = measures.getJSONObject(i);
+					temp = weightData.getInt("value");
+					kg = temp/1000.0;
+					if (weightData.getInt("type") == 1) {
+						mWeight = kg;
+					}
+				}
+			}
+		} catch (JSONException e) {
+		
+		}
+	}
+	
 	public void parseBP(String response) {
 		// TODO Auto-generated method stub
 		try {
