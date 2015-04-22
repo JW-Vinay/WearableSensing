@@ -47,4 +47,8 @@ public class NetworkConstants {
 	public final static String POST_WITHINGS_DATA_ENDPOINT = "api/v1/weight/";
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
 	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
+	public final static String POST_BP_HD = "api/v1/Bloodpressure";
+	public final static String POST_BO_HD = "api/v1/Bloodoxygen";
+//	http://rpcs.herokuapp.com/api/v1/Bloodoxygen
+//	http://rpcs.herokuapp.com/api/v1/Bloodpressure
 }
