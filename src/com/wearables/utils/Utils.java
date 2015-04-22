@@ -1,7 +1,9 @@
 package com.wearables.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 
@@ -38,5 +40,17 @@ public class Utils {
 		}
 		
 		return "";
+	}
+	
+	public static long getTotalMillisecondTime(long time){
+//		Locale loc = new Locale("en", "US");
+		Calendar oldCal = Calendar.getInstance();
+		oldCal.setTimeInMillis(time);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, oldCal.get(Calendar.HOUR));
+		cal.set(Calendar.MINUTE, oldCal.get(Calendar.MONTH));
+		cal.set(Calendar.SECOND, oldCal.get(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, oldCal.get(Calendar.MILLISECOND));
+		return cal.getTimeInMillis();
 	}
 }

@@ -1,5 +1,7 @@
 package com.wearables.utils;
 
+import java.util.Date;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,6 +9,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
 
+import com.wearables.models.BiometricBOModel;
+import com.wearables.models.BiometricBPModel;
 import com.wearables.networking.NetworkConstants;
 
 public class JSONParser {
@@ -52,11 +56,12 @@ public class JSONParser {
 		}
 	}
 
-	public void parseSP02(String response) {
+	public BiometricBOModel parseSP02(String response) {
 		// TODO Auto-generated method stub
 		try {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
+				BiometricBOModel model = null;
 				//TODO: write JSON parser
 				System.out.println(jObject.toString());
 				JSONArray boArray = (!jObject.isNull("BODataList")) ? jObject.getJSONArray("BODataList") : new JSONArray();
@@ -66,24 +71,28 @@ public class JSONParser {
 							.getString("BO") : "";
 					String mDate = (!currObj.isNull("MDate")) ? currObj
 							.getString("MDate") : "";
-							
-
+					
+					model = new BiometricBOModel(Integer.parseInt(bloodOxy), Utils.getTotalMillisecondTime(Long.parseLong(mDate)));
 					System.out.println("Blood oxygen " + bloodOxy + ": MDATE" + mDate);
 				}
+				return model;
 			}
 		} catch (JSONException e) {
 
 		}
+		return null;
 	}
 
-	public void parseBP(String response) {
+	public BiometricBPModel parseBP(String response) {
 		// TODO Auto-generated method stub
 		try {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
 				// TODE: write JSON parser
+				BiometricBPModel model = null;
 				System.out.println(jObject.toString());
 				JSONArray bpArray = (!jObject.isNull("BPDataList")) ? jObject.getJSONArray("BPDataList") : new JSONArray();
+				
 				for(int i=0; i < bpArray.length(); i++){
 					JSONObject currObj = bpArray.getJSONObject(i);
 					String systolic = (!currObj.isNull("HP")) ? currObj
@@ -94,15 +103,16 @@ public class JSONParser {
 							.getString("HR") : "";
 					String mDate = (!currObj.isNull("MDate")) ? currObj
 							.getString("MDate") : "";
+					model = new BiometricBPModel(Integer.parseInt(systolic),
+							Integer.parseInt(dystolic), Integer.parseInt(pulse), Utils.getTotalMillisecondTime(Long.parseLong(mDate)));
 					//System.out.println("SY " + systolic + ": dys" + dystolic + ": pulse" + pulse + ": MDATE" + mDate);
-					
-					
-					
 				}
+				return model;
 			}
 		} catch (JSONException e) {
 
 		}
+		return null;
 	}
 
 	public void parseRefreshToken(String response) {

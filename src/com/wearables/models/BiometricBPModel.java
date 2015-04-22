@@ -126,7 +126,7 @@ public class BiometricBPModel implements Parcelable{
 			object.put("systolic", String.valueOf(mSystolic));
 			object.put("dystolic", String.valueOf(mDystolic));
 			object.put("pulse", String.valueOf(mPulse));
-			object.put("time_recorded", mFormattedTime);		
+			object.put("timestamp", mFormattedTime);		
 			
 			return object;
 		}

@@ -29,6 +29,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml.Encoding;
 
+import com.wearables.models.BiometricBOModel;
+import com.wearables.models.BiometricBPModel;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.utils.JSONParser;
@@ -101,10 +103,27 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					jParser.parseResponse(response);
 					break;
 				case SP02:
-					jParser.parseSP02(response);
+					BiometricBOModel boModel = jParser.parseSP02(response);
+					
+					if(boModel != null){
+						JSONObject boObject = boModel.getJSON();
+						boObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						this.mHttpMethod = METHOD_TYPE.POST;
+						this.mUrl = NetworkConstants.HD_BO_POST_URL;
+						String boResponse = establishConnection(boObject);
+						System.out.println("Blood Oxy push response: " + boResponse);
+					}
 					break;
 				case BP:
-					jParser.parseBP(response);
+					BiometricBPModel bpModel = jParser.parseBP(response);
+					if(bpModel != null){
+						JSONObject bpObject = bpModel.getJSON();
+						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						this.mHttpMethod = METHOD_TYPE.POST;
+						this.mUrl = NetworkConstants.HD_BP_POST_URL;
+						String bpResponse = establishConnection(bpObject);
+						System.out.println("Blood Pressure push response: " + bpResponse);
+					}
 					break;
 				case REFRESH_TOKEN_BP:
 				case REFRESH_TOKEN_BO:

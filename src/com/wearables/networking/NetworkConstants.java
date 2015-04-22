@@ -25,6 +25,9 @@ public class NetworkConstants {
 	public static final String GET_BIODATA_URL = "https://api.ihealthlabs.com:8443/openapiv2/user/";
 	public static final String RESPONSE_TYPE = "response_type";
 	
+	public static final String HD_BP_POST_URL = "http://rpcs.herokuapp.com/api/v1/Bloodpressure";
+	public static final String HD_BO_POST_URL = "http://rpcs.herokuapp.com/api/v1/Bloodoxygen";
+	
 	public static final String SC = "sc";
 	public static final String SV = "sv";
 	
