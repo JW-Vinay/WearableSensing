@@ -45,6 +45,16 @@ public class PIPMeasurementsActivity extends Activity implements
 	TextView textViewStatus = null;
 	Handler handler = new Handler();
 	
+	private Runnable mDisconnectRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			handler.removeCallbacks(null);
+			pipManager.resetManager();
+			finish();
+			
+		}
+	};
 	private Runnable mPipRunnable = new Runnable() {
 		@Override
 		public void run() {
@@ -111,6 +121,8 @@ public class PIPMeasurementsActivity extends Activity implements
 				}
 			}
 		});
+		
+		handler.postDelayed(mDisconnectRunnable, 120000);
 	}
 	// Sets the action bar according to the standard UI of CURA app.
 	private void setActionBar() {
