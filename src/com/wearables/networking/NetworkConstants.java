@@ -35,6 +35,8 @@ public class NetworkConstants {
 	
 	/* BP sv*/
 	public static final String BP_SV = "e2f1faf965134081aab954e2b2555b58";
+	
+	public static final String START_TIME = "start_time";
 
 	/* Withings auth */
 	public static final String CONSUMER_KEY = "cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411";
@@ -46,9 +48,13 @@ public class NetworkConstants {
 	public static final String REQ_PARAM_UNAME = "user_name";
 	public final static String BASE_URL = "http://128.2.83.208:8001/";
 	public final static String POST_BIOMETRIC_ENDPOINT = "api/v1/biometrics/";
-	public final static String POST_BIOMETRIC_PRECISE_ENDPOINT = "/api/v1/biometricsprecise/";
+	public final static String POST_BIOMETRIC_PRECISE_ENDPOINT = "api/v1/biometricsprecise/";
 	public final static String POST_PIP_DATA_ENDPOINT = "api/v1/stress/";
 	public final static String POST_WITHINGS_DATA_ENDPOINT = "api/v1/weight/";
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
 	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
+	public final static String POST_BP_HD = "api/v1/Bloodpressure";
+	public final static String POST_BO_HD = "api/v1/Bloodoxygen";
+//	http://rpcs.herokuapp.com/api/v1/Bloodoxygen
+//	http://rpcs.herokuapp.com/api/v1/Bloodpressure
 }

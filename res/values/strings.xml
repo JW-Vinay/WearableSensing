@@ -6,11 +6,23 @@
     <string name="app_name">WearableMonitoring</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-	<string name="tag_BP">Measure Blood Pressue</string>
-	<string name="tag_BO">Measure Blood Oxygen Levels</string>
-	<string name="tag_PIP">Measure Caregiver Stress Levels</string>
-	<string name="tag_withings">Measure Weight</string>
-	<string name="tag_Dasboard">Load Dashboard</string>
-	<string name="tag_measure">Click to Measure</string>
-	<string name="tag_ready">Ready</string>
+    <string name="tag_BP">Measure Blood Pressue</string>
+    <string name="tag_BO">Measure Blood Oxygen Levels</string>
+    <string name="tag_PIP">Measure Caregiver Stress Levels</string>
+    <string name="tag_withings">Measure Weight</string>
+    <string name="tag_Dasboard">Load Dashboard</string>
+    <string name="tag_measure">Click to Measure</string>
+    <string name="tag_ready">Ready</string>
+    
+    <!-- Pop Up Text -->
+    <string name="tag_download_iHealth_msg">Please download the app to measure blood pressure and return back here.</string>
+    <string name="tag_measure_po">Measured blood oxygen levels on your iOS device?</string>
+
+    <!-- Pop Up Labels -->
+    <string name="positive_btn">Positive</string>
+    <string name="negative_btn">Negative</string>
+    <string name="neutral_btn">Neutral</string>
+	<string name="tag_ok">OK</string>
+	<string name="tag_yes">Yes</string>
+	<string name="tag_return">Return</string>
 </resources>

@@ -2,10 +2,12 @@ package com.wearables.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,7 +15,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.homescore.utils.PopUpListener;
 import com.wearables.DataCollectService;
 import com.wearables.R;
 import com.wearables.networking.NetworkConstants;
@@ -23,6 +27,7 @@ import com.wearables.networking.NetworkUtils;
 import com.wearables.networking.NetworkingTask;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
+import com.wearables.utils.PopUp;
 import com.wearables.utils.SharedPrefs;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -40,6 +45,8 @@ public class MainActivity extends Activity implements OnClickListener {
 					"summary"));
 
 		}};
+	
+		private int mViewClicked = -1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +74,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initiateDataPush(int id) {
+		long currentTime = System.currentTimeMillis()/1000;
+		
 		if (TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this)
 				.getParameters(NetworkConstants.ACCESS_TOKEN))) {
 			loadWebViewForAuth(id);
@@ -106,7 +115,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					url = NetworkUtils.generateUrl(
 							NetworkConstants.GET_BIODATA_URL + "/" + userID
 									+ "/spo2.json", NetworkUtils.getDataParams(
-									accessToken, NetworkConstants.SPO2_SV));
+									accessToken, NetworkConstants.SPO2_SV, MainActivity.this));
 
 					reqType = REQUEST_TYPE.SP02;
 
@@ -114,7 +123,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					url = NetworkUtils.generateUrl(
 							NetworkConstants.GET_BIODATA_URL + "/" + userID
 									+ "/bp.json", NetworkUtils.getDataParams(
-									accessToken, NetworkConstants.BP_SV));
+									accessToken, NetworkConstants.BP_SV, MainActivity.this));
 					reqType = REQUEST_TYPE.BP;
 				}
 
@@ -138,8 +147,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) {
-
+	public void onClick(final View v) {
+		long timestamp = System.currentTimeMillis()/1000 - 4*60*60;
+		SharedPrefs sp = SharedPrefs.getInstance(this);
+		sp.setParameters("currentTime", String.valueOf(timestamp));
 		Intent intent = null;
 		switch (v.getId()) {
 		case R.id.withingsBtn:
@@ -147,8 +158,64 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			break;
 		case R.id.ihealthBPBtn:
+			mViewClicked = v.getId();
+			try
+			{
+				intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
+				 startActivity(intent);
+			}
+			catch(ActivityNotFoundException e)
+			{
+				PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
+					
+					@Override
+					public void onPoisitiveBtnClicked() {
+						//install application
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=" + "iHealthMyVitals.V2"));
+						startActivity(intent);
+						mViewClicked = -1;
+					}
+					
+					@Override
+					public void onNeutralBtnClicked() {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onNegativeBtnClicked() {
+						// TODO Auto-generated method stub
+						
+					}
+				}, getString(R.string.tag_download_iHealth_msg), getString(R.string.tag_ok));
+				popup.show();
+				
+			}
+			break;
 		case R.id.ihealthBOBtn:
-			initiateDataPush(v.getId());
+//			Toast.makeText(MainActivity.this, getString(R.string.tag_measure_po), Toast.LENGTH_SHORT).show();
+			PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
+				
+				@Override
+				public void onPoisitiveBtnClicked() {
+					initiateDataPush(v.getId());
+				}
+				
+				@Override
+				public void onNeutralBtnClicked() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onNegativeBtnClicked() {
+					// TODO Auto-generated method stub
+					
+				}
+			}, R.string.tag_measure_po, R.string.tag_yes, R.string.tag_return);
+			popup.show();
+//			initiateDataPush(v.getId());
 			break;
 		case R.id.dashboardBtn:
 			break;
@@ -175,6 +242,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onStart();
 		IntentFilter filter = new IntentFilter("com.wearable.ui");
 		registerReceiver(mReceiver, filter);
+		
+		if(mViewClicked != -1)
+		{
+			initiateDataPush(mViewClicked);
+			mViewClicked = -1;
+		}
 		// IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		// registerReceiver(mReceiver, filter);
 	}
@@ -189,6 +262,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		
+//		case 200:
+//			System.out.println("resultCode: " + resultCode);
+//			break;
 		case 100:
 			if(resultCode == RESULT_OK)
 			{

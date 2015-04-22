@@ -154,37 +154,37 @@ public class BiometricSummaryModel implements Parcelable {
 
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public JSONObject getHDJSON()
-	{
-		try
-		{
-			JSONObject object = new JSONObject();
-			object.put("posture", mPosture);
-			object.put("skinTemperature", mCoreTemperature);
-			JSONObject breathingObject = new JSONObject();
-			breathingObject.put("breathing_rate", mBreathingRate);
-			object.put("breathingRate", breathingObject);
-			JSONObject heartObject = new JSONObject();
-			heartObject.put("heart_rate", mHeartRate);
-			object.put("heartRate", heartObject);
-			JSONObject ecgObject = new JSONObject();
-			ecgObject.put("ecg_amplitude", mECGAmplitude);
-			object.put("ecg", ecgObject);
-			object.put("timeRecorded", mFormattedTime);
-			
-			return object;
-		}
-		catch(JSONException e)
-		{
-			LogUtils.LOGE(TAG, "" + e.getMessage());
-		}
-		
-		return null;
-	}
+//	/**
+//	 * 
+//	 * @return
+//	 */
+//	public JSONObject getHDJSON()
+//	{
+//		try
+//		{
+//			JSONObject object = new JSONObject();
+//			object.put("posture", mPosture);
+//			object.put("skinTemperature", mCoreTemperature);
+//			JSONObject breathingObject = new JSONObject();
+//			breathingObject.put("breathing_rate", mBreathingRate);
+//			object.put("breathingRate", breathingObject);
+//			JSONObject heartObject = new JSONObject();
+//			heartObject.put("heart_rate", mHeartRate);
+//			object.put("heartRate", heartObject);
+//			JSONObject ecgObject = new JSONObject();
+//			ecgObject.put("ecg_amplitude", mECGAmplitude);
+//			object.put("ecg", ecgObject);
+//			object.put("timeRecorded", mFormattedTime);
+//			
+//			return object;
+//		}
+//		catch(JSONException e)
+//		{
+//			LogUtils.LOGE(TAG, "" + e.getMessage());
+//		}
+//		
+//		return null;
+//	}
 	
 	/**
 	 * Get json object for the model
