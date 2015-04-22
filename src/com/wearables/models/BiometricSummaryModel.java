@@ -195,12 +195,12 @@ public class BiometricSummaryModel implements Parcelable {
 		try
 		{
 			JSONObject object = new JSONObject();
-			object.put("posture", mPosture);
-			object.put("estimated_core_temperature", mCoreTemperature);
-			object.put("breathing_rate", mBreathingRate);
-			object.put("heart_rate", mHeartRate);
-			object.put("ecg", mECGAmplitude);
-			object.put("time_recorded", mFormattedTime);
+			object.put("posture", String.valueOf(mPosture));
+			object.put("estimated_core_temperature", String.valueOf(mCoreTemperature));
+			object.put("breathing_rate", String.valueOf(mBreathingRate));
+			object.put("heart_rate", String.valueOf(mHeartRate));
+			object.put("ecg", String.valueOf(mECGAmplitude));
+			object.put("time_recorded", String.valueOf(mFormattedTime));
 			
 			return object;
 		}

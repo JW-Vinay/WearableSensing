@@ -102,6 +102,7 @@ public class NetworkUtils {
 		}
 		catch(JSONException e)
 		{
+			e.printStackTrace();
 			LogUtils.LOGE(TAG, "" + e.getMessage());
 		}		
 	}
@@ -123,6 +124,7 @@ public class NetworkUtils {
 		}
 		catch(JSONException e)
 		{
+			e.printStackTrace();
 			LogUtils.LOGE(TAG, "" + e.getMessage());
 		}
 		
@@ -145,6 +147,7 @@ public class NetworkUtils {
 		}
 		catch(JSONException e)
 		{
+			e.printStackTrace();
 			LogUtils.LOGE(TAG, "" + e.getMessage());
 		}
 		
