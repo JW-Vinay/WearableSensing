@@ -69,6 +69,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initiateDataPush(int id) {
+		long currentTime = System.currentTimeMillis()/1000;
+		
 		if (TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this)
 				.getParameters(NetworkConstants.ACCESS_TOKEN))) {
 			loadWebViewForAuth(id);
@@ -108,7 +110,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					url = NetworkUtils.generateUrl(
 							NetworkConstants.GET_BIODATA_URL + "/" + userID
 									+ "/spo2.json", NetworkUtils.getDataParams(
-									accessToken, NetworkConstants.SPO2_SV));
+									accessToken, NetworkConstants.SPO2_SV, MainActivity.this));
 
 					reqType = REQUEST_TYPE.SP02;
 
@@ -116,7 +118,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					url = NetworkUtils.generateUrl(
 							NetworkConstants.GET_BIODATA_URL + "/" + userID
 									+ "/bp.json", NetworkUtils.getDataParams(
-									accessToken, NetworkConstants.BP_SV));
+									accessToken, NetworkConstants.BP_SV, MainActivity.this));
 					reqType = REQUEST_TYPE.BP;
 				}
 
@@ -141,7 +143,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
+		long timestamp = System.currentTimeMillis()/1000 - 4*60*60;
+		SharedPrefs sp = SharedPrefs.getInstance(this);
+		sp.setParameters("currentTime", String.valueOf(timestamp));
 		Intent intent = null;
 		switch (v.getId()) {
 		case R.id.withingsBtn:

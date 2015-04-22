@@ -35,6 +35,8 @@ public class NetworkConstants {
 	
 	/* BP sv*/
 	public static final String BP_SV = "e2f1faf965134081aab954e2b2555b58";
+	
+	public static final String START_TIME = "start_time";
 
 	
 	public static final String REQ_PARAM_UNAME = "user_name";

@@ -13,6 +13,7 @@ import com.wearables.models.BiometricECGModel;
 import com.wearables.models.BiometricSummaryModel;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
+import com.wearables.ui.MainActivity;
 import com.wearables.utils.LogUtils;
 import com.wearables.utils.SharedPrefs;
 
@@ -54,14 +55,16 @@ public class NetworkUtils {
 		return data;
 	}
 	
-	public static HashMap<String, String> getDataParams(String accessToken, String svVal){
+	public static HashMap<String, String> getDataParams(String accessToken, String svVal, Context context){
 		HashMap<String, String> data = new HashMap<String, String>();
+		SharedPrefs sp = SharedPrefs.getInstance(context);
 		data.put("client_id", NetworkConstants.CLIENT_ID);
 		data.put("client_secret", NetworkConstants.CLIENT_SECRET);
 		data.put("redirect_uri", NetworkConstants.REDIRECT_URI);
 		data.put(NetworkConstants.ACCESS_TOKEN, accessToken);
 		data.put(NetworkConstants.SC, NetworkConstants.SC_VALUE);
 		data.put(NetworkConstants.SV, svVal);
+		data.put(NetworkConstants.START_TIME, sp.getParameters("currentTime"));
 		return data;
 	}
 	

@@ -31,6 +31,7 @@ public class JSONParser {
 				
 				String accessToken = (!jObject.isNull("AccessToken")) ? jObject
 						.getString("AccessToken") : "";
+				System.out.println("AccessToken: " + accessToken);
 				sp.setParameters(NetworkConstants.ACCESS_TOKEN, accessToken);
 				sp.setLongParameters(NetworkConstants.TIMESTAMP, System.currentTimeMillis());
 				String userID = (!jObject.isNull("UserID")) ? jObject
@@ -65,6 +66,8 @@ public class JSONParser {
 							.getString("BO") : "";
 					String mDate = (!currObj.isNull("MDate")) ? currObj
 							.getString("MDate") : "";
+							
+
 					System.out.println("Blood oxygen " + bloodOxy + ": MDATE" + mDate);
 				}
 			}

@@ -16,6 +16,10 @@ public class BiometricBPModel implements Parcelable{
 	private int mSystolic;
 	private int mDystolic;
 	private int mPulse;
+	private int timestamp_year;
+	private int timestamp_month;
+	private int timestamp_day;
+	private int timestamp_msofday;
 	private long mTimeStampRecorded;
 	private String mFormattedTime;
 	

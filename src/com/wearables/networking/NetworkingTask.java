@@ -139,11 +139,11 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		String userID = SharedPrefs.getInstance(this.mContext).getParameters(NetworkConstants.USER_ID);
 		String SPO2_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
 				"/" + userID + "/spo2.json" , 
-				NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV));
+				NetworkUtils.getDataParams(accessToken, NetworkConstants.SPO2_SV, mContext));
 
 		String BP_Url = NetworkUtils.generateUrl(NetworkConstants.GET_BIODATA_URL + 
 				"/" + userID + "/bp.json" , 
-				NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV));
+				NetworkUtils.getDataParams(accessToken, NetworkConstants.BP_SV, mContext));
 			switch(mRequestType){
 				case ACCESS_TOKEN_BP:
 					new NetworkingTask(BP_Url, true, METHOD_TYPE.GET, REQUEST_TYPE.BP, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
