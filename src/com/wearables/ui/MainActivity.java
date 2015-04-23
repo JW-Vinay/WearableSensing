@@ -2,7 +2,6 @@ package com.wearables.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.homescore.utils.PopUpListener;
 import com.wearables.DataCollectService;
 import com.wearables.R;
 import com.wearables.networking.NetworkConstants;
@@ -28,6 +25,7 @@ import com.wearables.networking.NetworkingTask;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
 import com.wearables.utils.PopUp;
+import com.wearables.utils.PopUpListener;
 import com.wearables.utils.SharedPrefs;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -193,7 +191,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case R.id.ihealthBOBtn:
-//			Toast.makeText(MainActivity.this, getString(R.string.tag_measure_po), Toast.LENGTH_SHORT).show();
 			PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
 				
 				@Override
@@ -247,8 +244,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			initiateDataPush(mViewClicked);
 			mViewClicked = -1;
 		}
-		// IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		// registerReceiver(mReceiver, filter);
 	}
 
 	@Override

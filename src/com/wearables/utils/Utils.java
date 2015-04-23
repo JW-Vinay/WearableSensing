@@ -31,7 +31,7 @@ public class Utils {
 		try
 		{
 			Date d = new Date(time);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault());
 			return sdf.format(d);
 		}
 		catch(Exception e)
@@ -43,7 +43,7 @@ public class Utils {
 	}
 	
 	public static long getTotalMillisecondTime(long time){
-//		Locale loc = new Locale("en", "US");
+
 		Calendar oldCal = Calendar.getInstance();
 		oldCal.setTimeInMillis(time);
 		Calendar cal = Calendar.getInstance();

@@ -1,4 +1,4 @@
-package com.homescore.utils;
+package com.wearables.utils;
 
 /**
  * @author Vinay Ramkrishnan 

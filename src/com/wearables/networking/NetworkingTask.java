@@ -122,7 +122,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.HD_BP_POST_URL;
 						String bpResponse = establishConnection(bpObject);
-						System.out.println("Blood Pressure push response: " + bpResponse);
+//						System.out.println("Blood Pressure push response: " + bpResponse);
 					}
 					break;
 				case REFRESH_TOKEN_BP:
