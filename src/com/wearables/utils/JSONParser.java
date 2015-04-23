@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.view.View.MeasureSpec;
 
+import com.wearables.models.WithingsWeight;
 import com.wearables.networking.NetworkConstants;
 
 public class JSONParser {
@@ -76,28 +78,52 @@ public class JSONParser {
 		}
 	}
 
-	public void parseWithings(String response) {
-		int temp;
-		double kg;
+	public WithingsWeight parseWithings(String response) {
+//		int temp;
+//		int kg;
+//		http://wbsapi.withings.net/measure?action=getmeas&oauth_consumer_key=9e993fd9448f18c86128e243d3cc6bffdeed88ce8b079bd090728b5&oauth_nonce=dafd9d0f28c900cb532d7186fd28562c&oauth_signature=tHwR99IwbHTiWH8V9ZkVFOa%2Fxs0%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1429823520&oauth_token=158021847c8bcc43816669b93cfdd038d9f4691870982300cb5c32d840ddd&oauth_version=1.0&userid=7229874
 		try {
 			JSONObject jObject = new JSONObject(response);
 			if (jObject != null) {
-				JSONObject measuregrps = jObject.getJSONObject("measuregrps");
-				mTimeStampRecorded = measuregrps.getInt("date");
-				JSONArray measures = measuregrps.getJSONArray("measures");
-				int n = measures.length();
-				for (int i = 0; i < n; i++) {
-					JSONObject weightData = measures.getJSONObject(i);
-					temp = weightData.getInt("value");
-					kg = temp/1000.0;
-					if (weightData.getInt("type") == 1) {
-						mWeight = kg;
+				JSONObject body = jObject.getJSONObject("body");
+				if(body != null)
+				{
+					JSONArray measuregps = body.getJSONArray("measuregrps");
+					if(measuregps != null && measuregps.length() > 0)
+					{
+						JSONObject measureObject = measuregps.getJSONObject(0);
+						long timestamp = measureObject.getLong("date");
+						JSONArray measuresAray = measureObject.getJSONArray("measures");
+						if(measuresAray != null && measuresAray.length() > 0)
+						{
+							for(int i =0; i<measuresAray.length(); i++)
+							{
+								JSONObject obj = measuresAray.getJSONObject(i);
+								if(obj != null)
+								{
+									int type = obj.getInt("type");
+									if(type == 1)
+									{
+										int val =  obj.getInt("value");
+										int unit = obj.getInt("unit");
+										double kg = val * Math.pow(10, unit);
+										WithingsWeight model = new WithingsWeight((int)Math.round(kg), (timestamp*1000));
+										return model;
+									}
+								}
+							}
+						}
 					}
 				}
+				
 			}
 		} catch (JSONException e) {
 		
+			e.printStackTrace();
+//			LogUtils.LOGE(TA, message);
 		}
+		
+		return null;
 	}
 	
 	public void parseBP(String response) {

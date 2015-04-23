@@ -162,14 +162,11 @@ public class NetworkUtils {
 		new NetworkingTask(url, true, METHOD_TYPE.POST, REQUEST_TYPE.POST_PIP, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 	}
 	
-	/**
-	 * Post Withings weighing scale data
-	 * @param context
-	 * @param object
-	 */
-	public static void postWithingsData(Context context, JSONObject object)
+	public static void getAndPostWithingsData(Context context)
 	{
-		String url = NetworkConstants.BASE_URL + NetworkConstants.POST_WITHINGS_DATA_ENDPOINT;
-		new NetworkingTask(url, true, METHOD_TYPE.POST, REQUEST_TYPE.POST_WITHINGS, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+		String url = NetworkConstants.WITHINGS_URL_DATA;
+		new NetworkingTask(url, true, METHOD_TYPE.GET, REQUEST_TYPE.WITHINGS_DATA_ACCESS, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				
 	}
+	
 }

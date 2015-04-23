@@ -9,7 +9,7 @@ public class NetworkConstants {
 	
 	public static enum REQUEST_TYPE
 	{
-		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP, REFRESH_TOKEN_BP, REFRESH_TOKEN_BO, POST_PIP, ACCESS_TOKEN_SPO2, ACCESS_TOKEN_BP, POST_WITHINGS
+		POST_BIOMETRIC_ZEPHYR, ACCESS_TOKEN, SP02, BP, REFRESH_TOKEN_BP, REFRESH_TOKEN_BO, POST_PIP, ACCESS_TOKEN_SPO2, ACCESS_TOKEN_BP, WITHINGS_DATA_ACCESS
 	}
 	
 	public static final String ACCESS_TOKEN = "access_token";
@@ -39,19 +39,20 @@ public class NetworkConstants {
 	public static final String START_TIME = "start_time";
 
 	/* Withings auth */
-	public static final String CONSUMER_KEY = "cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411";
-	public static final String CONSUMER_SECRET = "918de5c8eb71fc0e2260c8117185773db81c4706cfb727c4524cf96";
+//	public static final String CONSUMER_KEY = "cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411";
+//	public static final String CONSUMER_SECRET = "918de5c8eb71fc0e2260c8117185773db81c4706cfb727c4524cf96";
 	
-	public static final String CALLBACK_URL = "http://my.withings.com/en/utils/graph?userid=7109101&publickey=36525c7a7de36cc7&massUnit=lb&forcedisplay=fm";
-	public static final String WITHINGS_USR_ID = "7109101";
-	public static final String WITHINGS_URL_DATA = "http://wbsapi.withings.net/measure?action=getmeas&oauth_consumer_key=cf0d262768d16bf5f162768ddf0fef3038237f89539ee096c53f784cc9411&oauth_nonce=3b5f6ada7d7147d8fa4a2786aab1df49&oauth_signature=OtHDuQ%2BHw0joHcRZynpsXXtQLmY%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1429592489&oauth_token=ef8238d382e0b4796c4ccccfb2d51f287ffc2322c1190cecc01d83c21&oauth_version=1.0&userid=7109101";
-	
+//	public static final String CALLBACK_URL = "http://my.withings.com/en/utils/graph?userid=7109101&publickey=36525c7a7de36cc7&massUnit=lb&forcedisplay=fm";
+//	public static final String WITHINGS_USR_ID = "7229874";
+	public static final String WITHINGS_URL_DATA = "http://wbsapi.withings.net/measure?action=getmeas&oauth_consumer_key=9e993fd9448f18c86128e243d3cc6bffdeed88ce8b079bd090728b5&oauth_nonce=dafd9d0f28c900cb532d7186fd28562c&oauth_signature=tHwR99IwbHTiWH8V9ZkVFOa%2Fxs0%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1429823520&oauth_token=158021847c8bcc43816669b93cfdd038d9f4691870982300cb5c32d840ddd&oauth_version=1.0&userid=7229874";
+
 	public static final String REQ_PARAM_UNAME = "user_name";
 	public final static String BASE_URL = "http://128.2.83.208:8001/";
+//	public static final String POST_WITHINGS = BASE_URL + "api/v1/weight/";
 	public final static String POST_BIOMETRIC_ENDPOINT = "api/v1/biometrics/";
 	public final static String POST_BIOMETRIC_PRECISE_ENDPOINT = "api/v1/biometricsprecise/";
 	public final static String POST_PIP_DATA_ENDPOINT = "api/v1/stress/";
-	public final static String POST_WITHINGS_DATA_ENDPOINT = "api/v1/weight/";
+	public final static String POST_WITHINGS_DATA_ENDPOINT = BASE_URL + "api/v1/weight/";
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
 	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
 	public final static String POST_BP_HD = "api/v1/Bloodpressure";

@@ -37,7 +37,7 @@ public class WithingsWeight implements Parcelable{
 	}
 	
 
-	public WithingsWeight(int mBloodOxygen, long mTimeStampRecorded) {
+	public WithingsWeight(int mWeight, long mTimeStampRecorded) {
 		super();
 		this.mWeight = mWeight;
 		this.mTimeStampRecorded = mTimeStampRecorded;
@@ -97,7 +97,7 @@ public class WithingsWeight implements Parcelable{
 		{
 			//TODO: change names of params according to API
 			JSONObject object = new JSONObject();
-			object.put("weight", mWeight);
+			object.put("weight", String.valueOf(mWeight));
 			object.put("time_recorded", mFormattedTime);		
 			
 			return object;

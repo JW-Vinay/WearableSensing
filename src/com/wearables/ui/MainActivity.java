@@ -155,6 +155,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.withingsBtn:
 			//Edit
+			try
+			{
+				intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
+//				if(intent != null)
+				{
+					NetworkUtils.getAndPostWithingsData(MainActivity.this);
+				}
+//				else
+//				{
+//					//TODO:
+//				}
+			}
+			catch(Exception e)
+			{
+				
+			}
 			
 			break;
 		case R.id.ihealthBPBtn:
