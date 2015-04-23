@@ -163,7 +163,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
 				 startActivity(intent);
 			}
-			catch(ActivityNotFoundException e)
+			catch(Exception e)
 			{
 				PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
 					
