@@ -64,7 +64,7 @@ public class JSONParser {
 							.getString("MDate") : "";
 					
 					model = new BiometricBOModel(Integer.parseInt(bloodOxy), Utils.getTotalMillisecondTime(Long.parseLong(mDate)));
-					System.out.println("Blood oxygen " + bloodOxy + ": MDATE" + mDate);
+//					System.out.println("Blood oxygen " + bloodOxy + ": MDATE" + mDate);
 				}
 				return model;
 			}

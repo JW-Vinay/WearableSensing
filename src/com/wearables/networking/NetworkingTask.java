@@ -110,8 +110,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 						boObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.HD_BO_POST_URL;
-						String boResponse = establishConnection(boObject);
-						System.out.println("Blood Oxy push response: " + boResponse);
+						establishConnection(boObject);
+//						System.out.println("Blood Oxy push response: " + boResponse);
 					}
 					break;
 				case BP:
@@ -121,7 +121,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.HD_BP_POST_URL;
-						String bpResponse = establishConnection(bpObject);
+						establishConnection(bpObject);
 //						System.out.println("Blood Pressure push response: " + bpResponse);
 					}
 					break;
