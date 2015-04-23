@@ -128,6 +128,12 @@ public class DataCollectService extends IntentService implements NetworkCompleti
         }
     	else if(action == SERVICE_ACTIONS.CONNECT_DEVICE)
     		connectDevice();
+    	else if(action == SERVICE_ACTIONS.DISCONNECT_DEVICE)
+    	{
+    		_bt.removeConnectedEventListener(_listener);
+			/*Close the communication with the device & throw an exception if failure*/
+			_bt.Close();
+    	}
     		
        
     }

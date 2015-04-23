@@ -2,6 +2,7 @@ package com.wearables.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wearables.DataCollectService;
 import com.wearables.R;
@@ -34,6 +36,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			mDashboardBtn, mWithingsBtn;
 
 	private TextView mBioMetricDetailsView;
+	private BluetoothAdapter mAdapter;
 	private BroadcastReceiver mReceiver =new BroadcastReceiver() {
 
 		@Override
@@ -63,8 +66,34 @@ public class MainActivity extends Activity implements OnClickListener {
 		mDashboardBtn = (Button) findViewById(R.id.dashboardBtn);
 		mDashboardBtn.setOnClickListener(this);
 		mPiPBtn.setOnClickListener(this);
+		
+//		initializeAdapter();
+		mAdapter = BluetoothAdapter.getDefaultAdapter();
+		if(mAdapter == null)
+		{
+			Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
+		}
+		else		{
+			if (!mAdapter.isEnabled()) {
+				Intent discoverableIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+				discoverableIntent.putExtra(
+						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+				startActivityForResult(discoverableIntent, 300);
+			}
+			else
+			{
+				// Initiate Service to manage bioharness
+				startService();
 
-		// Initiate Service to manage bioharness
+			}
+		}
+		
+		
+	}
+
+	private void startService()
+	{
 		Intent intent = new Intent(this, DataCollectService.class);
 		intent.putExtra(Constants.INTENT_TASK_ACTION,
 				SERVICE_ACTIONS.START_SERVICE);
@@ -256,9 +285,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		
-//		case 200:
-//			System.out.println("resultCode: " + resultCode);
-//			break;
+		
 		case 100:
 			if(resultCode == RESULT_OK)
 			{
@@ -287,6 +314,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		case 300:
 			// discoverable now
+			if(resultCode != RESULT_CANCELED)
+			{
+				startService();
+			}
 			break;
 		}
 	}

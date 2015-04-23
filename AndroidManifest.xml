@@ -37,7 +37,7 @@
         <receiver android:name="com.wearables.utils.BluetoothPairingReceiver" >
             <intent-filter>
                 <action android:name="android.bluetooth.device.action.FOUND" />
-
+				<action android:name="android.bluetooth.adapter.action.STATE_CHANGED"></action>
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
         </receiver>

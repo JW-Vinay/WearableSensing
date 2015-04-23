@@ -25,6 +25,7 @@ public class Utils {
 //		alarmManager.cancel(pendingIntent);
 //		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, Constants.INITIAL_START_TIME, Constants.INTERVAL_MILLIS, pendingIntent);
 //	}
+
 	
 	public static String getFormattedTime(long time)
 	{
