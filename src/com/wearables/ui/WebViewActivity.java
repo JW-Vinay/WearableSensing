@@ -1,14 +1,5 @@
 package com.wearables.ui;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import com.wearables.R;
-import com.wearables.R.id;
-import com.wearables.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,11 +7,11 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.wearables.R;
+
 public class WebViewActivity extends Activity
 {
 	private WebView mWebView;
-	private String mUrl = "";
-	private boolean flag= false;
 	private int mId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +28,6 @@ public class WebViewActivity extends Activity
 		{
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				// TODO Auto-generated method stub
 				if(url.startsWith("http://codingthecrowd"))
 				{					
 					//extract the code to send back
@@ -49,22 +39,6 @@ public class WebViewActivity extends Activity
 					finish();
 					
 				}
-//				URL aURL;
-//				try {
-//					aURL = new URL(url);
-//					URLConnection conn = aURL.openConnection(); 
-//		            conn.connect(); 
-//		            InputStream is = conn.getInputStream();
-//		            int b;
-//		            System.out.println("print startd");
-//		            while((b = is.read()) != -1){
-//		            	System.out.println(b);
-//		            }
-//		            System.out.println("print end");
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} 
 	            
 				return super.shouldOverrideUrlLoading(view, url);
 			}

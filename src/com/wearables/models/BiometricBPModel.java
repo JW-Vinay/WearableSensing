@@ -3,11 +3,11 @@ package com.wearables.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.wearables.utils.LogUtils;
-import com.wearables.utils.Utils;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.wearables.utils.LogUtils;
+import com.wearables.utils.Utils;
 
 public class BiometricBPModel implements Parcelable{
 
@@ -16,10 +16,10 @@ public class BiometricBPModel implements Parcelable{
 	private int mSystolic;
 	private int mDystolic;
 	private int mPulse;
-	private int timestamp_year;
-	private int timestamp_month;
-	private int timestamp_day;
-	private int timestamp_msofday;
+//	private int timestamp_year;
+//	private int timestamp_month;
+//	private int timestamp_day;
+//	private int timestamp_msofday;
 	private long mTimeStampRecorded;
 	private String mFormattedTime;
 	
@@ -121,12 +121,11 @@ public class BiometricBPModel implements Parcelable{
 	{
 		try
 		{
-			//TODO: change names of params according to API
 			JSONObject object = new JSONObject();
-			object.put("systolic", mSystolic);
-			object.put("dystolic", mDystolic);
-			object.put("pulse", mPulse);
-			object.put("time_recorded", mFormattedTime);		
+			object.put("systolic", String.valueOf(mSystolic));
+			object.put("dystolic", String.valueOf(mDystolic));
+			object.put("pulse", String.valueOf(mPulse));
+			object.put("timestamp", mFormattedTime);		
 			
 			return object;
 		}

@@ -97,8 +97,8 @@ public class BiometricBOModel implements Parcelable{
 		{
 			//TODO: change names of params according to API
 			JSONObject object = new JSONObject();
-			object.put("blood_oxygen", mBloodOxygen);
-			object.put("time_recorded", mFormattedTime);		
+			object.put("blood_oxygen", String.valueOf(mBloodOxygen));
+			object.put("timestamp", mFormattedTime);		
 			
 			return object;
 		}

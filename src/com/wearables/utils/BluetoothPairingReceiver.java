@@ -1,5 +1,6 @@
 
 package com.wearables.utils;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +21,18 @@ public class BluetoothPairingReceiver extends BroadcastReceiver {
 				workIntent.putExtra(Constants.INTENT_DEV, device);
 				context.startService(workIntent);
 			}
+        }
+        else if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction()))
+        {
+        	int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_ON);
+        	if( state == BluetoothAdapter.STATE_OFF || state == BluetoothAdapter.STATE_TURNING_OFF)
+        	{
+        		Intent workIntent = new Intent(context, DataCollectService.class);
+				workIntent.putExtra(Constants.INTENT_TASK_ACTION, SERVICE_ACTIONS.DISCONNECT_DEVICE);
+//				workIntent.putExtra(Constants.INTENT_DEV, device);
+				context.startService(workIntent);
+        	}
+        	//TODO: Add disconnection code
         }
 	}
 }

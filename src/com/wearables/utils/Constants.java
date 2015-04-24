@@ -13,7 +13,7 @@ public class Constants {
 	
 	public static enum SERVICE_ACTIONS
 	{
-		START_SERVICE, PAIR_DEVICE, CONNECT_DEVICE,
+		START_SERVICE, PAIR_DEVICE, CONNECT_DEVICE, DISCONNECT_DEVICE
 	}
 	
 	public static final long INTERVAL_MILLIS = 5 * 1000;

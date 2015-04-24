@@ -1,30 +1,3 @@
-/* Copyright (c) 2014 Galvanic Ltd.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of Galvanic Limited.
- *
- * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR 
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- * OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GALVANIC LIMITED BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
- * 
- */
-
-/* PIPSDKExample is a bare-bones application illustrating how to
- * integrate PIP functionality into a Java native application. In order
- * to focus on the PIP-specific code, UI has been pared back to the minimum.
- * Also, only the core PIP concepts of discovering, connecting to and streaming
- * from a PIP device are covered. The application allows the user to
- * discover a single PIP, connect to it and start streaming, in order to
- * receive events about the user's state of stress/relaxation.
- */
 package com.wearables.ui;
 
 import java.util.ArrayList;
@@ -54,11 +27,7 @@ import com.wearables.R;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Utils;
 
-/* The application's user interface must inherit and implement the
- * PipManagerListener, PipConnectionListener and PipAnalyzerListener
- * interfaces in order to handle events relating to PIP discovery,
- * connection status and streaming/data analysis respectively.
- */
+
 public class PIPMeasurementsActivity extends Activity implements
 		PipManagerListener, PipConnectionListener, PipAnalyzerListener {
 	JSONObject stressdata;
@@ -76,6 +45,16 @@ public class PIPMeasurementsActivity extends Activity implements
 	TextView textViewStatus = null;
 	Handler handler = new Handler();
 	
+	private Runnable mDisconnectRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			handler.removeCallbacks(null);
+			pipManager.resetManager();
+			finish();
+			
+		}
+	};
 	private Runnable mPipRunnable = new Runnable() {
 		@Override
 		public void run() {
@@ -94,8 +73,6 @@ public class PIPMeasurementsActivity extends Activity implements
 		textViewStatus = (TextView) findViewById(R.id.statusTextView);
 		buttonDiscover = (Button) findViewById(R.id.stressMeasureBtn);
 		buttonDiscover.setEnabled(true);
-		// buttonDisconnect = (Button) findViewById(R.id.Disconnect);
-		// buttonDisconnect.setEnabled(false);
 		pipManager = PipManager.getInstance();
 		pipManager.initialize(this, this);
 		
@@ -128,12 +105,12 @@ public class PIPMeasurementsActivity extends Activity implements
 //                				
 //			}
 //		}, 1000);
+
 		// Kick off a PIP discovery process when the Discover button is clicked.
 		buttonDiscover.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				pipDiscovered = false;
 				buttonDiscover.setEnabled(false);
-				// buttonDisconnect.setEnabled(false);
 				pipManager.resetManager();
 				textViewStatus.setText("Discovering...");
 				pipManager.discoverPips();
@@ -144,8 +121,10 @@ public class PIPMeasurementsActivity extends Activity implements
 				}
 			}
 		});
+		
+		handler.postDelayed(mDisconnectRunnable, 120000);
 	}
-
+	// Sets the action bar according to the standard UI of CURA app.
 	private void setActionBar() {
 		ActionBar actionbar = getActionBar();
 		actionbar.setTitle(getString(R.string.tag_cura));

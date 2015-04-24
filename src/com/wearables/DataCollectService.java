@@ -25,7 +25,6 @@ import com.wearables.utils.LogUtils;
 import com.wearables.zephyr.BTClient;
 import com.wearables.zephyr.ConnectListenerImpl;
 import com.wearables.zephyr.ConnectedListener;
-import com.wearables.zephyr.ZephyrProtocol;
 
 /**
  * This service pulls RSS content from a web site URL contained in the incoming Intent (see
@@ -56,9 +55,9 @@ public class DataCollectService extends IntentService implements NetworkCompleti
 	
 //	private BiometricSummaryModel mBioMetricModel;
 	private 		BluetoothAdapter mBluetoothAdapter;
-	BTClient _bt;
-	ZephyrProtocol _protocol;
-	ConnectedListener<BTClient> _listener;
+	private BTClient _bt;
+//	private ZephyrProtocol _protocol;
+	private ConnectedListener<BTClient> _listener;
 	private Handler mHandler = new Handler();
 	private NetworkQueue mNetworkQueue;
 	
@@ -128,6 +127,17 @@ public class DataCollectService extends IntentService implements NetworkCompleti
         }
     	else if(action == SERVICE_ACTIONS.CONNECT_DEVICE)
     		connectDevice();
+    	else if(action == SERVICE_ACTIONS.DISCONNECT_DEVICE)
+    	{
+    		if(_bt != null)
+    		{
+    			_bt.removeConnectedEventListener(_listener);
+    			/*Close the communication with the device & throw an exception if failure*/
+    			_bt.Close();
+    		}
+    		stopSelf();
+    		
+    	}
     		
        
     }

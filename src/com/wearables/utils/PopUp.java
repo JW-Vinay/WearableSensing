@@ -10,7 +10,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.homescore.utils.PopUpListener;
 import com.wearables.R;
 
 @SuppressLint("SetJavaScriptEnabled")

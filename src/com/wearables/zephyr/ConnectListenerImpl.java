@@ -334,7 +334,8 @@ import com.wearables.utils.LogUtils;
     					double respRate = summaryInfoPacket.getRespirationRate(msg.getBytes());
     					double temp = summaryInfoPacket.getCoreTemperature(msg.getBytes());
     					double ecg = summaryInfoPacket.getECGAmplitude(msg.getBytes());
-    					long timestamp = summaryInfoPacket.getMsofDay(msg.getBytes());
+    					//long timestamp = summaryInfoPacket.getMsofDay(msg.getBytes());
+    					long timestamp = System.currentTimeMillis();
     									  	
     					
     					String summarytext = "Posture is  "+ posture + 

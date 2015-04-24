@@ -2,7 +2,7 @@ package com.wearables.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.homescore.utils.PopUpListener;
+import com.parse.ParseInstallation;
 import com.wearables.DataCollectService;
 import com.wearables.R;
 import com.wearables.networking.NetworkConstants;
@@ -28,6 +28,7 @@ import com.wearables.networking.NetworkingTask;
 import com.wearables.utils.Constants;
 import com.wearables.utils.Constants.SERVICE_ACTIONS;
 import com.wearables.utils.PopUp;
+import com.wearables.utils.PopUpListener;
 import com.wearables.utils.SharedPrefs;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -36,6 +37,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			mDashboardBtn, mWithingsBtn;
 
 	private TextView mBioMetricDetailsView;
+	private BluetoothAdapter mAdapter;
 	private BroadcastReceiver mReceiver =new BroadcastReceiver() {
 
 		@Override
@@ -54,7 +56,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		setActionBar();
 		mBioMetricDetailsView = (TextView) findViewById(R.id.biometricDetailsView);
-
+		
+		ParseInstallation.getCurrentInstallation().put("curaUser", "mshrimal");
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 		mWithingsBtn = (Button) findViewById(R.id.withingsBtn);
 		mWithingsBtn.setOnClickListener(this);
 		mBPMonitoringBtn = (Button) findViewById(R.id.ihealthBPBtn);
@@ -65,8 +69,61 @@ public class MainActivity extends Activity implements OnClickListener {
 		mDashboardBtn = (Button) findViewById(R.id.dashboardBtn);
 		mDashboardBtn.setOnClickListener(this);
 		mPiPBtn.setOnClickListener(this);
+		
+		
+//		initializeAdapter();
+		mAdapter = BluetoothAdapter.getDefaultAdapter();
+		if(mAdapter == null)
+		{
+			Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
+		}
+		else		{
+			if (!mAdapter.isEnabled()) {
+				Intent discoverableIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+				discoverableIntent.putExtra(
+						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+				startActivityForResult(discoverableIntent, 300);
+			}
+			else
+			{
+				// Initiate Service to manage bioharness
+				startService();
 
-		// Initiate Service to manage bioharness
+			}
+		}
+		
+//		String sample = "{\"push_hash\":\"d41d8cd98f00b204e9800998ecf8427e\",\"user_name\":\"mshrimal\",\"text\":\"Dead guy\"}";
+//		buildNotification(this, "");
+		
+	}
+
+//	private void buildNotification(Context context, String jsonResponse)
+//	{
+//		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+//		builder.setSmallIcon(R.drawable.ic_launcher);
+//		builder.setTicker(context.getString(R.string.ticker_text));
+//		builder.setLights(context.getResources().getColor(R.color.color_red), 100, 100);
+//		builder.setContentTitle("Dead Guy");
+//		builder.setShowWhen(true);
+//		
+//		builder.setSound(Uri.parse("android.resource://com.wearables/"+ R.raw.alert));
+//		builder.setContentText("Needs Help!!");
+//		builder.setCategory(NotificationCompat.CATEGORY_ALARM);
+//
+//		
+//		Intent intent = new Intent(Intent.ACTION_CALL);
+//		intent.setData(Uri.parse("tel:4126084234"));
+//		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		builder.setContentIntent(pendingIntent);
+//		builder.setAutoCancel(true);
+//		
+//		NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+//		manager.notify(100, builder.build());
+//		
+//	}
+	private void startService()
+	{
 		Intent intent = new Intent(this, DataCollectService.class);
 		intent.putExtra(Constants.INTENT_TASK_ACTION,
 				SERVICE_ACTIONS.START_SERVICE);
@@ -74,7 +131,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initiateDataPush(int id) {
-		long currentTime = System.currentTimeMillis()/1000;
 		
 		if (TextUtils.isEmpty(SharedPrefs.getInstance(MainActivity.this)
 				.getParameters(NetworkConstants.ACCESS_TOKEN))) {
@@ -180,7 +236,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
 				 startActivity(intent);
 			}
-			catch(ActivityNotFoundException e)
+			catch(Exception e)
 			{
 				PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
 					
@@ -210,7 +266,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case R.id.ihealthBOBtn:
-//			Toast.makeText(MainActivity.this, getString(R.string.tag_measure_po), Toast.LENGTH_SHORT).show();
 			PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
 				
 				@Override
@@ -264,8 +319,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			initiateDataPush(mViewClicked);
 			mViewClicked = -1;
 		}
-		// IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		// registerReceiver(mReceiver, filter);
 	}
 
 	@Override
@@ -278,9 +331,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		
-//		case 200:
-//			System.out.println("resultCode: " + resultCode);
-//			break;
+		
 		case 100:
 			if(resultCode == RESULT_OK)
 			{
@@ -309,6 +360,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		case 300:
 			// discoverable now
+			if(resultCode != RESULT_CANCELED)
+			{
+				startService();
+			}
 			break;
 		}
 	}

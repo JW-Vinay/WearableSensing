@@ -25,6 +25,9 @@ public class NetworkConstants {
 	public static final String GET_BIODATA_URL = "https://api.ihealthlabs.com:8443/openapiv2/user/";
 	public static final String RESPONSE_TYPE = "response_type";
 	
+	public static final String HD_BP_POST_URL = "http://rpcs.herokuapp.com/api/v1/Bloodpressure";
+	public static final String HD_BO_POST_URL = "http://rpcs.herokuapp.com/api/v1/Bloodoxygen";
+	
 	public static final String SC = "sc";
 	public static final String SV = "sv";
 	
@@ -55,8 +58,8 @@ public class NetworkConstants {
 	public final static String POST_WITHINGS_DATA_ENDPOINT = BASE_URL + "api/v1/weight/";
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";
 	public final static String POST_BIOMETRIC_HD = "api/v1/Biometrics";
-	public final static String POST_BP_HD = "api/v1/Bloodpressure";
-	public final static String POST_BO_HD = "api/v1/Bloodoxygen";
+//	public final static String POST_BP_HD = "api/v1/Bloodpressure";
+//	public final static String POST_BO_HD = "api/v1/Bloodoxygen";
 //	http://rpcs.herokuapp.com/api/v1/Bloodoxygen
 //	http://rpcs.herokuapp.com/api/v1/Bloodpressure
 }

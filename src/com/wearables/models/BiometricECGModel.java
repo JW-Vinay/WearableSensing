@@ -144,7 +144,6 @@ public class BiometricECGModel implements Parcelable {
 		try
 		{
 			JSONObject object = new JSONObject();
-//			object.put("ecg_sample", byteToShort(mECGSample));
 			object.put("time_recorded", mFormattedTime);
 			object.put("samples_per_packet ", mNoSamples);
 			object.put("sequence_number", mSeqNo);
