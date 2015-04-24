@@ -17,7 +17,7 @@
     <!-- Pop Up Text -->
     <string name="tag_download_iHealth_msg">Please download the app to measure blood pressure and return back here.</string>
     <string name="tag_measure_po">Measured blood oxygen levels on your iOS device?</string>
-
+	<string name="tag_download_withings_msg">Please download the app to measure weight and return back here.</string>
     <!-- Pop Up Labels -->
     <string name="positive_btn">Positive</string>
     <string name="negative_btn">Negative</string>

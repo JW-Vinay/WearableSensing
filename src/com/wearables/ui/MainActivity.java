@@ -210,23 +210,38 @@ public class MainActivity extends Activity implements OnClickListener {
 		Intent intent = null;
 		switch (v.getId()) {
 		case R.id.withingsBtn:
-			//Edit
-			try
-			{
-				intent = getPackageManager().getLaunchIntentForPackage("iHealthMyVitals.V2");
-//				if(intent != null)
+				intent = getPackageManager().getLaunchIntentForPackage("com.withings.wiscale2");
+				if(intent != null)
 				{
 					NetworkUtils.getAndPostWithingsData(MainActivity.this);
 				}
-//				else
-//				{
-//					//TODO:
-//				}
-			}
-			catch(Exception e)
-			{
-				
-			}
+				else
+				{
+					PopUp popup = new PopUp(MainActivity.this, new PopUpListener() {
+						
+						@Override
+						public void onPoisitiveBtnClicked() {
+							//install application
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setData(Uri.parse("market://details?id=" + "com.withings.wiscale2"));
+							startActivity(intent);
+							mViewClicked = -1;
+						}
+						
+						@Override
+						public void onNeutralBtnClicked() {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onNegativeBtnClicked() {
+							// TODO Auto-generated method stub
+							
+						}
+					}, getString(R.string.tag_download_withings_msg), getString(R.string.tag_ok));
+					popup.show();
+				}
 			
 			break;
 		case R.id.ihealthBPBtn:
