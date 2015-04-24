@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseInstallation;
 import com.wearables.DataCollectService;
 import com.wearables.R;
 import com.wearables.networking.NetworkConstants;
@@ -55,7 +56,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		setActionBar();
 		mBioMetricDetailsView = (TextView) findViewById(R.id.biometricDetailsView);
-
+		
+		ParseInstallation.getCurrentInstallation().put("curaUser", "mshrimal");
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 		mWithingsBtn = (Button) findViewById(R.id.withingsBtn);
 		mWithingsBtn.setOnClickListener(this);
 		mBPMonitoringBtn = (Button) findViewById(R.id.ihealthBPBtn);
@@ -66,6 +69,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mDashboardBtn = (Button) findViewById(R.id.dashboardBtn);
 		mDashboardBtn.setOnClickListener(this);
 		mPiPBtn.setOnClickListener(this);
+		
 		
 //		initializeAdapter();
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -89,9 +93,35 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 		
+//		String sample = "{\"push_hash\":\"d41d8cd98f00b204e9800998ecf8427e\",\"user_name\":\"mshrimal\",\"text\":\"Dead guy\"}";
+//		buildNotification(this, "");
 		
 	}
 
+//	private void buildNotification(Context context, String jsonResponse)
+//	{
+//		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+//		builder.setSmallIcon(R.drawable.ic_launcher);
+//		builder.setTicker(context.getString(R.string.ticker_text));
+//		builder.setLights(context.getResources().getColor(R.color.color_red), 100, 100);
+//		builder.setContentTitle("Dead Guy");
+//		builder.setShowWhen(true);
+//		
+//		builder.setSound(Uri.parse("android.resource://com.wearables/"+ R.raw.alert));
+//		builder.setContentText("Needs Help!!");
+//		builder.setCategory(NotificationCompat.CATEGORY_ALARM);
+//
+//		
+//		Intent intent = new Intent(Intent.ACTION_CALL);
+//		intent.setData(Uri.parse("tel:4126084234"));
+//		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		builder.setContentIntent(pendingIntent);
+//		builder.setAutoCancel(true);
+//		
+//		NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+//		manager.notify(100, builder.build());
+//		
+//	}
 	private void startService()
 	{
 		Intent intent = new Intent(this, DataCollectService.class);

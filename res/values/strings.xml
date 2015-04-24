@@ -25,4 +25,7 @@
 	<string name="tag_ok">OK</string>
 	<string name="tag_yes">Yes</string>
 	<string name="tag_return">Return</string>
+	
+	<!-- Notification Text -->
+	<string name="ticker_text">Emergency!!!</string>
 </resources>
