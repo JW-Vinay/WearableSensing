@@ -28,9 +28,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml.Encoding;
+import android.widget.Toast;
 
 import com.wearables.models.BiometricBOModel;
 import com.wearables.models.BiometricBPModel;
+import com.wearables.models.WithingsWeight;
 import com.wearables.networking.NetworkConstants.METHOD_TYPE;
 import com.wearables.networking.NetworkConstants.REQUEST_TYPE;
 import com.wearables.utils.JSONParser;
@@ -129,6 +131,17 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 				case REFRESH_TOKEN_BO:
 					jParser.parseRefreshToken(response);
 					break;
+				case WITHINGS_DATA_ACCESS:
+					WithingsWeight withingsModel = jParser.parseWithings(response);
+					if(withingsModel != null)
+					{
+						JSONObject withingsObject = withingsModel.getJSON();
+						withingsObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						this.mHttpMethod = METHOD_TYPE.POST;
+						this.mUrl = NetworkConstants.POST_WITHINGS_DATA_ENDPOINT;
+						String test = establishConnection(withingsObject);
+						System.out.println(test);
+					}
 				default:
 //					System.out.println("default");
 					break;
@@ -185,6 +198,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					break;
 				case BP:	
 					break;
+				case WITHINGS_DATA_ACCESS:
+					Toast.makeText(mContext, "Weight posted to dashboard", Toast.LENGTH_SHORT).show();
 				case POST_BIOMETRIC_ZEPHYR:
 					if(mListener != null)
 						mListener.onTaskComplete();
