@@ -54,6 +54,8 @@ public class NetworkConstants {
 //	public static final String POST_WITHINGS = BASE_URL + "api/v1/weight/";
 	public final static String POST_BIOMETRIC_ENDPOINT = "api/v1/biometrics/";
 	public final static String POST_BIOMETRIC_PRECISE_ENDPOINT = "api/v1/biometricsprecise/";
+	public final static String POST_BLOOD_OXYGEN_ENDPOINT = "api/v1/bloodoxygen/";
+	public final static String POST_BLOOD_PRESSURE_ENDPOINT = "api/v1/bloodpressure/";
 	public final static String POST_PIP_DATA_ENDPOINT = "api/v1/stress/";
 	public final static String POST_WITHINGS_DATA_ENDPOINT = BASE_URL + "api/v1/weight/";
 	public final static String HOME_DIALYSIS_ENDPOINT = "http://rpcs.herokuapp.com/";

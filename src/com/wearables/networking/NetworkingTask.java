@@ -110,10 +110,16 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					if(boModel != null){
 						JSONObject boObject = boModel.getJSON();
 						boObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						
+						// To HD Server
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.HD_BO_POST_URL;
 						establishConnection(boObject);
-//						System.out.println("Blood Oxy push response: " + boResponse);
+						
+						// To Cura server
+						this.mUrl = NetworkConstants.BASE_URL + NetworkConstants.POST_BLOOD_OXYGEN_ENDPOINT;
+						String boResponse = establishConnection(boObject);
+						//System.out.println("Blood Oxy push response: " + boResponse);
 					}
 					break;
 				case BP:
@@ -121,10 +127,16 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					if(bpModel != null){
 						JSONObject bpObject = bpModel.getJSON();
 						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						
+						// To HD server
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.HD_BP_POST_URL;
 						establishConnection(bpObject);
-//						System.out.println("Blood Pressure push response: " + bpResponse);
+						
+						// To Cura server
+						this.mUrl = NetworkConstants.BASE_URL + NetworkConstants.POST_BLOOD_PRESSURE_ENDPOINT;
+						String bpResponse = establishConnection(bpObject);
+						//System.out.println("Blood Pressure push response: " + bpResponse);
 					}
 					break;
 				case REFRESH_TOKEN_BP:
