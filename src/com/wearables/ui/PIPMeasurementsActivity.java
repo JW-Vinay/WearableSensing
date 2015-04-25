@@ -278,10 +278,11 @@ public class PIPMeasurementsActivity extends Activity implements
 			if (PipAnalyzerListener.STRESS_TREND_RELAXING == currentTrendEvent) {
 				textViewStatus.setText("Streaming: Relaxing");
 				relaxedcount++;
+				float stresscore = (stressedcount*100) / (relaxedcount+stressedcount);
                 try {
 
                     stressdata.put("user_name", "mshrimal");
-                    stressdata.put("stress_score", String.valueOf(0));
+                    stressdata.put("stress_score", String.valueOf(stresscore));
                     stressdata.put("skin_conductance", String.valueOf(0));
                     stressdata.put("duration", String.valueOf(120));
                     stressdata.put("number_relax_events", String.valueOf(relaxedcount));
@@ -299,9 +300,10 @@ public class PIPMeasurementsActivity extends Activity implements
 			} else if (PipAnalyzerListener.STRESS_TREND_STRESSING == currentTrendEvent) {
 				textViewStatus.setText("Streaming: Stressing");
 				stressedcount++;
-                try {
+                float stresscore = (stressedcount*100) / (relaxedcount+stressedcount);
+				try {
                     stressdata.put("user_name", "mshrimal");
-                    stressdata.put("stress_score", String.valueOf(0));
+                    stressdata.put("stress_score", String.valueOf(stresscore));
                     stressdata.put("skin_conductance",String.valueOf(0));
                     stressdata.put("duration", String.valueOf(120));
                     stressdata.put("number_relax_events", String.valueOf(relaxedcount));
@@ -329,12 +331,12 @@ public class PIPMeasurementsActivity extends Activity implements
 			textViewStatus.setText("Streaming: Inactive");
 			try {
 				stressdata.put("user_name", "mshrimal");
-				stressdata.put("stress_score", 0);
-				stressdata.put("skin_conductance", 0);
-				stressdata.put("duration", 120);
-				stressdata.put("number_relax_events", -1);
-				stressdata.put("number_stress_events", -1);
-				stressdata.put("number_steady_events", -1);
+				stressdata.put("stress_score", String.valueOf(0));
+				stressdata.put("skin_conductance", String.valueOf(0));
+				stressdata.put("duration", String.valueOf(120));
+				stressdata.put("number_relax_events", String.valueOf(-1));
+				stressdata.put("number_stress_events", String.valueOf(-1));
+				stressdata.put("number_steady_events", String.valueOf(-1));
 				stressdata.put("time_recorded", currentTime);
 				stressdata.put("time_received", currentTime);
 
