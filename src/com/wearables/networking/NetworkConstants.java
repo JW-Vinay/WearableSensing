@@ -49,6 +49,8 @@ public class NetworkConstants {
 //	public static final String WITHINGS_USR_ID = "7229874";
 	public static final String WITHINGS_URL_DATA = "http://wbsapi.withings.net/measure?action=getmeas&oauth_consumer_key=9e993fd9448f18c86128e243d3cc6bffdeed88ce8b079bd090728b5&oauth_nonce=dafd9d0f28c900cb532d7186fd28562c&oauth_signature=tHwR99IwbHTiWH8V9ZkVFOa%2Fxs0%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1429823520&oauth_token=158021847c8bcc43816669b93cfdd038d9f4691870982300cb5c32d840ddd&oauth_version=1.0&userid=7229874";
 
+	public static final String USER_ROLE = "role";
+	public static final String CURRENT_USER_NAME = "current_user_name";
 	public static final String REQ_PARAM_UNAME = "user_name";
 	public final static String BASE_URL = "http://128.2.83.208:8001/";
 //	public static final String POST_WITHINGS = BASE_URL + "api/v1/weight/";

@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -57,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		setActionBar();
 		mBioMetricDetailsView = (TextView) findViewById(R.id.biometricDetailsView);
 		
-		ParseInstallation.getCurrentInstallation().put("curaUser", "mshrimal");
+		ParseInstallation.getCurrentInstallation().put("curaUser", SharedPrefs.getInstance(this).getParameters(NetworkConstants.REQ_PARAM_UNAME));
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 		mWithingsBtn = (Button) findViewById(R.id.withingsBtn);
 		mWithingsBtn.setOnClickListener(this);
@@ -71,33 +73,75 @@ public class MainActivity extends Activity implements OnClickListener {
 		mPiPBtn.setOnClickListener(this);
 		
 		
-//		initializeAdapter();
-		mAdapter = BluetoothAdapter.getDefaultAdapter();
-		if(mAdapter == null)
+		if(getResources().getStringArray(R.array.roles)[0].compareTo(SharedPrefs.getInstance(this).getParameters(NetworkConstants.USER_ROLE)) == 0)
 		{
-			Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
-		}
-		else		{
-			if (!mAdapter.isEnabled()) {
-				Intent discoverableIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-				discoverableIntent.putExtra(
-						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-				startActivityForResult(discoverableIntent, 300);
-			}
-			else
+			mAdapter = BluetoothAdapter.getDefaultAdapter();
+			if(mAdapter == null)
 			{
-				// Initiate Service to manage bioharness
-				startService();
-
+				Toast.makeText(this, "Not Supported", Toast.LENGTH_SHORT).show();
 			}
+			else		{
+				if (!mAdapter.isEnabled()) {
+					Intent discoverableIntent = new Intent(
+							BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+					discoverableIntent.putExtra(
+							BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+					startActivityForResult(discoverableIntent, 300);
+				}
+				else
+				{
+					// Initiate Service to manage bioharness
+					startService();
+
+				}
+			}
+
 		}
-		
-//		String sample = "{\"push_hash\":\"d41d8cd98f00b204e9800998ecf8427e\",\"user_name\":\"mshrimal\",\"text\":\"Dead guy\"}";
-//		buildNotification(this, "");
-		
+			
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	
+		switch(item.getItemId())
+		{
+		case R.id.action_logout:
+			PopUp popup = new PopUp(this, new PopUpListener() {
+				
+				@Override
+				public void onPoisitiveBtnClicked() {
+			
+					SharedPrefs.getInstance(MainActivity.this).setParameters(NetworkConstants.REQ_PARAM_UNAME, "");
+					SharedPrefs.getInstance(MainActivity.this).setParameters(NetworkConstants.CURRENT_USER_NAME, "");
+					SharedPrefs.getInstance(MainActivity.this).setParameters(NetworkConstants.USER_ROLE, "");
+					finish();
+				}
+				
+				@Override
+				public void onNeutralBtnClicked() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onNegativeBtnClicked() {
+					// TODO Auto-generated method stub
+					
+				}
+			}, R.string.tag_logout_text, R.string.tag_confirm, R.string.tag_cancel);
+			popup.show();
+			
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 //	private void buildNotification(Context context, String jsonResponse)
 //	{
 //		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);

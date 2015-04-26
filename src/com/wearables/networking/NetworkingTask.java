@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.provider.SyncStateContract.Constants;
 import android.util.Xml.Encoding;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 		  if (mShowloader) {
               this.mDialog = new ProgressDialog(mContext);
               this.mDialog.setCancelable(false);
+              this.mDialog.setTitle("Sending Data");
           }
 	}
 	
@@ -109,7 +111,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					
 					if(boModel != null){
 						JSONObject boObject = boModel.getJSON();
-						boObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+//						boObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						boObject.put(NetworkConstants.REQ_PARAM_UNAME, SharedPrefs.getInstance(mContext).getParameters(NetworkConstants.REQ_PARAM_UNAME));
 						
 						// To HD Server
 						this.mHttpMethod = METHOD_TYPE.POST;
@@ -126,7 +129,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					BiometricBPModel bpModel = jParser.parseBP(response);
 					if(bpModel != null){
 						JSONObject bpObject = bpModel.getJSON();
-						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+//						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						bpObject.put(NetworkConstants.REQ_PARAM_UNAME, SharedPrefs.getInstance(mContext).getParameters(NetworkConstants.REQ_PARAM_UNAME));
 						
 						// To HD server
 						this.mHttpMethod = METHOD_TYPE.POST;
@@ -148,7 +152,8 @@ public class NetworkingTask  extends AsyncTask<Object, Void, Void>
 					if(withingsModel != null)
 					{
 						JSONObject withingsObject = withingsModel.getJSON();
-						withingsObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+//						withingsObject.put(NetworkConstants.REQ_PARAM_UNAME, "mshrimal");
+						withingsObject.put(NetworkConstants.REQ_PARAM_UNAME, SharedPrefs.getInstance(mContext).getParameters(NetworkConstants.REQ_PARAM_UNAME));
 						this.mHttpMethod = METHOD_TYPE.POST;
 						this.mUrl = NetworkConstants.POST_WITHINGS_DATA_ENDPOINT;
 						String test = establishConnection(withingsObject);

@@ -13,19 +13,34 @@
     <string name="tag_Dasboard">Load Dashboard</string>
     <string name="tag_measure">Click to Measure</string>
     <string name="tag_ready">Ready</string>
-    
+    <string name="hint_patient_uname">Patient User Name</string>
+    <string name="hint_username">User Name</string>
+    <string name="hint_password">Password</string>
+    <string name="tag_submit">Submit</string>
+    <string name="tag_logout">Logout</string>
+
     <!-- Pop Up Text -->
     <string name="tag_download_iHealth_msg">Please download the app to measure blood pressure and return back here.</string>
     <string name="tag_measure_po">Measured blood oxygen levels on your iOS device?</string>
-	<string name="tag_download_withings_msg">Please download the app to measure weight and return back here.</string>
+    <string name="tag_download_withings_msg">Please download the app to measure weight and return back here.</string>
+    <string name="tag_patient_username_msg">Patient user name for a caregiver cannot be empty</string>
+    <string name="tag_logout_text">Are you sure you want to Logout?</string>
     <!-- Pop Up Labels -->
     <string name="positive_btn">Positive</string>
     <string name="negative_btn">Negative</string>
     <string name="neutral_btn">Neutral</string>
-	<string name="tag_ok">OK</string>
-	<string name="tag_yes">Yes</string>
-	<string name="tag_return">Return</string>
-	
-	<!-- Notification Text -->
-	<string name="ticker_text">Emergency!!!</string>
+    <string name="tag_confirm">Confirm</string>
+    <string name="tag_ok">OK</string>
+    <string name="tag_cancel">Cancel</string>
+    <string name="tag_yes">Yes</string>
+    <string name="tag_return">Return</string>
+    <string name="tag_prompt">Select your role</string>
+
+    <string-array name="roles">
+        <item>Patient</item>
+        <item>Caregiver</item>
+    </string-array>
+    <!-- Notification Text -->
+    <string name="ticker_text">Emergency!!!</string>
+
 </resources>
