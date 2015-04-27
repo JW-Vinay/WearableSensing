@@ -27,84 +27,86 @@ import com.wearables.R;
 import com.wearables.networking.NetworkUtils;
 import com.wearables.utils.Utils;
 
-
 public class PIPMeasurementsActivity extends Activity implements
 		PipManagerListener, PipConnectionListener, PipAnalyzerListener {
+
 	JSONObject stressdata;
 	public int stressedcount = 0;
 	public int relaxedcount = 0;
 	public int steadycount = 0;
+
+	private static final long TIME_PERIOD = 30 * 1000;
 	// Singleton instance of PipManager object.
 	private PipManager pipManager = null;
 	// We will only be discovering a single PIP in this app.
 	private boolean pipDiscovered = false;
 
 	// Minimal UI implementation.
-	Button buttonDiscover = null;
-	Button buttonDisconnect = null;
-	TextView textViewStatus = null;
+	Button buttonDiscover;
+	Button buttonDisconnect;
+	TextView textViewStatus;
+
 	Handler handler = new Handler();
-	
+
 	private Runnable mDisconnectRunnable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			handler.removeCallbacks(null);
 			pipManager.resetManager();
 			finish();
-			
+
 		}
 	};
 	private Runnable mPipRunnable = new Runnable() {
 		@Override
 		public void run() {
-			pipManager.getPip(
-					pipManager.getDiscoveryAtIndex(0).pipID)
+			pipManager.getPip(pipManager.getDiscoveryAtIndex(0).pipID)
 					.disconnect();
 			buttonDiscover.setEnabled(true);
 		}
 	};
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pipsdkexample);
 		setActionBar();
-		textViewStatus = (TextView) findViewById(R.id.statusTextView);
+		textViewStatus = (TextView) findViewById(R.id.messageTextView);
 		buttonDiscover = (Button) findViewById(R.id.stressMeasureBtn);
 		buttonDiscover.setEnabled(true);
 		pipManager = PipManager.getInstance();
 		pipManager.initialize(this, this);
-		
-		//TODO: Uncomment for testing data
-//		handler.postDelayed(new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				try
-//				{
-//					stressdata = new JSONObject();
-//					stressdata.put("user_name", "mshrimal");
-//	                stressdata.put("stress_score", 0);
-//	                stressdata.put("skin_conductance", 0);
-//	                stressdata.put("duration", 120);
-//	                stressdata.put("number_relax_events", 10);
-//	                stressdata.put("number_stress_events", 20);
-//	                stressdata.put("number_steady_events", steadycount);
-//	                stressdata.put("time_recorded", "2015-04-12 20:52:41");
-//	                stressdata.put("time_received", "2015-04-12 20:52:48");
-//
-//	                NetworkUtils.postStressMeasurementData(
-//	                        PIPMeasurementsActivity.this, stressdata);
-//
-//				}
-//				catch(JSONException e)
-//				{
-//					e.printStackTrace();
-//				}
-//                				
-//			}
-//		}, 1000);
+
+		// TODO: Uncomment for testing data
+		// handler.postDelayed(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// try
+		// {
+		// stressdata = new JSONObject();
+		// stressdata.put("user_name", "mshrimal");
+		// stressdata.put("stress_score", 0);
+		// stressdata.put("skin_conductance", 0);
+		// stressdata.put("duration", 120);
+		// stressdata.put("number_relax_events", 10);
+		// stressdata.put("number_stress_events", 20);
+		// stressdata.put("number_steady_events", steadycount);
+		// stressdata.put("time_recorded", "2015-04-12 20:52:41");
+		// stressdata.put("time_received", "2015-04-12 20:52:48");
+		//
+		// NetworkUtils.postStressMeasurementData(
+		// PIPMeasurementsActivity.this, stressdata);
+		//
+		// }
+		// catch(JSONException e)
+		// {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// }, 1000);
 
 		// Kick off a PIP discovery process when the Discover button is clicked.
 		buttonDiscover.setOnClickListener(new View.OnClickListener() {
@@ -115,16 +117,18 @@ public class PIPMeasurementsActivity extends Activity implements
 				textViewStatus.setText("Discovering...");
 				pipManager.discoverPips();
 				if (pipDiscovered) {
-					
-					handler.postDelayed(mPipRunnable, 120000);
+
+					handler.postDelayed(mPipRunnable, TIME_PERIOD);
 
 				}
 			}
 		});
-		
-		handler.postDelayed(mDisconnectRunnable, 120000);
+
+		handler.postDelayed(mDisconnectRunnable, TIME_PERIOD);
 	}
+
 	// Sets the action bar according to the standard UI of CURA app.
+	@SuppressWarnings("deprecation")
 	private void setActionBar() {
 		ActionBar actionbar = getActionBar();
 		actionbar.setTitle(getString(R.string.tag_cura));
@@ -136,15 +140,15 @@ public class PIPMeasurementsActivity extends Activity implements
 	}
 
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	public void connectPip() {
 		// We stop discovery after the first PIP has been found, so
 		// the list of discovered PIPs will contain a single entry at index
@@ -264,8 +268,8 @@ public class PIPMeasurementsActivity extends Activity implements
 	@Override
 	public void onAnalyzerOutputEvent(int pipID, int status) {
 		stressdata = new JSONObject();
-        String currentTime = Utils.getFormattedTime(System.currentTimeMillis());
-        if (pipManager.getPip(pipID).isActive()) {
+		String currentTime = Utils.getFormattedTime(System.currentTimeMillis());
+		if (pipManager.getPip(pipID).isActive()) {
 			// Retrieve the analyzer's current output
 			ArrayList<PipAnalyzerOutput> op = pipManager.getPip(pipID)
 					.getAnalyzerOutput();
@@ -278,73 +282,65 @@ public class PIPMeasurementsActivity extends Activity implements
 			if (PipAnalyzerListener.STRESS_TREND_RELAXING == currentTrendEvent) {
 				textViewStatus.setText("Streaming: Relaxing");
 				relaxedcount++;
-				float stresscore = (stressedcount*100) / (relaxedcount+stressedcount);
-                try {
+				float stresscore = (stressedcount * 100)
+						/ (relaxedcount + stressedcount);
+				try {
 
-                    stressdata.put("user_name", "mshrimal");
-                    stressdata.put("stress_score", String.valueOf(stresscore));
-                    stressdata.put("skin_conductance", String.valueOf(0));
-                    stressdata.put("duration", String.valueOf(120));
-                    stressdata.put("number_relax_events", String.valueOf(relaxedcount));
-                    stressdata.put("number_stress_events", String.valueOf(stressedcount));
-                    stressdata.put("number_steady_events", String.valueOf(steadycount));
-                    stressdata.put("time_recorded", currentTime);
-                    stressdata.put("time_received", currentTime);
+					stressdata.put("user_name", "mshrimal");
+					stressdata.put("stress_score", String.valueOf(stresscore));
+					stressdata.put("skin_conductance", String.valueOf(0));
+					stressdata.put("duration", String.valueOf(30));
+					stressdata.put("number_relax_events",
+							String.valueOf(relaxedcount));
+					stressdata.put("number_stress_events",
+							String.valueOf(stressedcount));
+					stressdata.put("number_steady_events",
+							String.valueOf(steadycount));
+					stressdata.put("time_recorded", currentTime);
+					stressdata.put("time_received", currentTime);
 
-                    NetworkUtils.postStressMeasurementData(
-                            PIPMeasurementsActivity.this, stressdata);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-				// Log.e("Relaxed", Integer.toString(relaxedcount));
+					NetworkUtils.postStressMeasurementData(
+							PIPMeasurementsActivity.this, stressdata);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
 			} else if (PipAnalyzerListener.STRESS_TREND_STRESSING == currentTrendEvent) {
 				textViewStatus.setText("Streaming: Stressing");
 				stressedcount++;
-                float stresscore = (stressedcount*100) / (relaxedcount+stressedcount);
+				float stresscore = (stressedcount * 100)
+						/ (relaxedcount + stressedcount);
 				try {
-                    stressdata.put("user_name", "mshrimal");
-                    stressdata.put("stress_score", String.valueOf(stresscore));
-                    stressdata.put("skin_conductance",String.valueOf(0));
-                    stressdata.put("duration", String.valueOf(120));
-                    stressdata.put("number_relax_events", String.valueOf(relaxedcount));
-                    stressdata.put("number_stress_events", String.valueOf(stressedcount));
-                    stressdata.put("number_steady_events", String.valueOf(steadycount));
-                    stressdata.put("time_recorded", currentTime);
-                    stressdata.put("time_received", currentTime);
+					stressdata.put("user_name", "mshrimal");
+					stressdata.put("stress_score", String.valueOf(stresscore));
+					stressdata.put("skin_conductance", String.valueOf(0));
+					stressdata.put("duration", String.valueOf(30));
+					stressdata.put("number_relax_events",
+							String.valueOf(relaxedcount));
+					stressdata.put("number_stress_events",
+							String.valueOf(stressedcount));
+					stressdata.put("number_steady_events",
+							String.valueOf(steadycount));
+					stressdata.put("time_recorded", currentTime);
+					stressdata.put("time_received", currentTime);
 
-                    NetworkUtils.postStressMeasurementData(
-                            PIPMeasurementsActivity.this, stressdata);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-				// Log.e("Stressed", Integer.toString(stressedcount));
+					NetworkUtils.postStressMeasurementData(
+							PIPMeasurementsActivity.this, stressdata);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
 			} else {
 				// User is holding PIP and samples are being received,
 				// but the user is neither stressing nor relaxing.
 				textViewStatus.setText("Streaming: Active");
 				steadycount++;
-				// Log.e("Steady", Integer.toString(steadycount));
 			}
 
 		} else {
 
-			textViewStatus.setText("Streaming: Inactive");
-			try {
-				stressdata.put("user_name", "mshrimal");
-				stressdata.put("stress_score", String.valueOf(0));
-				stressdata.put("skin_conductance", String.valueOf(0));
-				stressdata.put("duration", String.valueOf(120));
-				stressdata.put("number_relax_events", String.valueOf(-1));
-				stressdata.put("number_stress_events", String.valueOf(-1));
-				stressdata.put("number_steady_events", String.valueOf(-1));
-				stressdata.put("time_recorded", currentTime);
-				stressdata.put("time_received", currentTime);
-
-				NetworkUtils.postStressMeasurementData(
-						PIPMeasurementsActivity.this, stressdata);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			textViewStatus.setText("Streaming: Inactive - "
+					+ getString(R.string.pip_inactive_msg));
 		}
 	}
 

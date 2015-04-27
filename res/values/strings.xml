@@ -13,12 +13,13 @@
     <string name="tag_Dasboard">Load Dashboard</string>
     <string name="tag_measure">Click to Measure</string>
     <string name="tag_ready">Ready</string>
+    <string name="tag_status">Status:</string>
     <string name="hint_patient_uname">Patient User Name</string>
     <string name="hint_username">User Name</string>
     <string name="hint_password">Password</string>
     <string name="tag_submit">Submit</string>
     <string name="tag_logout">Logout</string>
-
+	<string name="pip_inactive_msg">Please hold the PIP in the right position</string>
     <!-- Pop Up Text -->
     <string name="tag_download_iHealth_msg">Please download the app to measure blood pressure and return back here.</string>
     <string name="tag_measure_po">Measured blood oxygen levels on your iOS device?</string>

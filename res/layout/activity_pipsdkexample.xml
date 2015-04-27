@@ -22,16 +22,39 @@
 
     <TextView
         android:id="@+id/statusTextView"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/stressMeasureBtn"
         android:layout_alignStart="@+id/stressMeasureBtn"
         android:layout_below="@+id/stressMeasureBtn"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:gravity="start|center_vertical"
-        android:text="@string/tag_ready"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/tag_status"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/statusTextView"
+        android:layout_alignLeft="@+id/statusTextView"
+        android:layout_alignRight="@+id/statusTextView"
+        android:layout_alignStart="@+id/statusTextView"
+        android:layout_below="@+id/statusTextView"
+        android:layout_marginEnd="10dp"
+        android:padding="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:gravity="start|center_vertical"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="normal" />
 
 </RelativeLayout>

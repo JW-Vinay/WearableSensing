@@ -162,13 +162,13 @@ public class NetworkUtils {
 	{
 		String url = NetworkConstants.BASE_URL + NetworkConstants.POST_PIP_DATA_ENDPOINT;
 //		url  = "http://128.2.83.208:8001/api/v1/stress/";
-		new NetworkingTask(url, true, METHOD_TYPE.POST, REQUEST_TYPE.POST_PIP, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
+		new NetworkingTask(url, false, METHOD_TYPE.POST, REQUEST_TYPE.POST_PIP, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 	}
 	
 	public static void getAndPostWithingsData(Context context)
 	{
 		String url = NetworkConstants.WITHINGS_URL_DATA;
-		new NetworkingTask(url, true, METHOD_TYPE.GET, REQUEST_TYPE.WITHINGS_DATA_ACCESS, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		new NetworkingTask(url, false, METHOD_TYPE.GET, REQUEST_TYPE.WITHINGS_DATA_ACCESS, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				
 	}
 	
