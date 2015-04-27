@@ -348,6 +348,8 @@ public class MainActivity extends Activity implements OnClickListener {
 //			initiateDataPush(v.getId());
 			break;
 		case R.id.dashboardBtn:
+			intent  = getPackageManager().getLaunchIntentForPackage("com.ionicframework.cura370407");
+			startActivity(intent);
 			break;
 		case R.id.pipBtn:
 			 intent = new Intent(this, PIPMeasurementsActivity.class);

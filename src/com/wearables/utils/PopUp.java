@@ -400,6 +400,7 @@ public class PopUp extends Dialog implements android.view.View.OnClickListener
 					mListener.onNeutralBtnClicked();
 				}
 			}
+			break;
 			default:
 				break;
 		}
