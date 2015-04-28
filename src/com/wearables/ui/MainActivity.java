@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private TextView mBioMetricDetailsView;
 	private BluetoothAdapter mAdapter;
+	private Handler mHandler = new Handler();
 	private BroadcastReceiver mReceiver =new BroadcastReceiver() {
 
 		@Override
@@ -329,7 +331,14 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 				@Override
 				public void onPoisitiveBtnClicked() {
-					initiateDataPush(v.getId());
+					mHandler.postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							initiateDataPush(v.getId());
+						}
+					}, 20000);
+					
 				}
 				
 				@Override
